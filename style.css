@@ -1082,115 +1082,163 @@ footer {
     font-size: 0.9rem;
     color: var(--text-muted);
 }
-/* UBA Page Specifics */
+/* UBA Page Refinement */
 .service-tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
+    gap: 15px;
+    margin-bottom: 40px;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 50px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .tab-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    color: var(--text);
-    padding: 12px 25px;
-    border-radius: 30px;
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 15px 30px;
+    border-radius: 40px;
     cursor: pointer;
-    transition: 0.3s;
-    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .tab-btn.active {
     background: var(--gold);
     color: var(--black);
-    border-color: var(--gold);
-    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-}
-
-.uba-tab-content {
-    display: none;
-    animation: fadeIn 0.5s ease;
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
 }
 
 .uba-tab-content.active {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 50px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.05);
 }
 
-.price-grid {
-    list-style: none;
-    margin: 20px 0;
-    padding: 0;
+.service-info h2 {
+    color: var(--gold);
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--gold);
+    padding-left: 20px;
 }
 
 .price-grid li {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.price-grid li strong {
-    color: var(--gold);
+    padding: 15px 0;
+    font-size: 1.1rem;
 }
 
 .card-tiers {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin: 20px 0;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
 }
 
 .tier-card {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid rgba(212, 175, 55, 0.1);
-    text-align: center;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    padding: 25px 20px;
+    cursor: pointer;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.tier-card:hover, .tier-card.selected {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.08);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.tier-card.selected {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.tier-card.selected h4, .tier-card.selected .price {
+    color: var(--black);
 }
 
 .tier-card h4 {
-    color: var(--gold);
-    margin-bottom: 5px;
+    font-size: 1.3rem;
+    text-transform: uppercase;
 }
 
 .tier-card .price {
-    font-size: 1.2rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin: 15px 0;
+}
+
+.order-form {
+    background: rgba(0,0,0,0.2);
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    position: sticky;
+    top: 100px;
+}
+
+.order-form label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.order-form input, .order-form select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 15px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.order-form input:focus {
+    border-color: var(--gold);
+    outline: none;
+    background: rgba(255,255,255,0.1);
+}
+
+.price-display h3 {
+    font-size: 2.2rem;
+    color: var(--gold);
     margin: 10px 0;
 }
 
 .docs-needed {
-    background: rgba(212, 175, 55, 0.05);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 20px;
-    border-left: 4px solid var(--gold);
+    margin-top: 30px;
+    border-left-width: 6px;
+    font-size: 1.05rem;
 }
 
-.docs-needed i {
-    color: var(--gold);
-    margin-right: 10px;
-}
-
-.price-display {
-    background: rgba(0,0,0,0.3);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    margin: 20px 0;
-    border: 1px dashed var(--gold);
-}
-
-@media (max-width: 992px) {
+@media (max-width: 768px) {
     .uba-tab-content.active {
-        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 30px;
     }
-    .card-tiers {
-        grid-template-columns: 1fr;
+    .service-info h2 {
+        font-size: 1.8rem;
     }
 }
 .cart-item-price {
@@ -1273,4 +1321,55 @@ footer {
 
 .contact-form-group input:focus, .contact-form-group textarea:focus {
     border-color: var(--gold);
+}
+
+/* UBA Selection Summary & Features */
+.tier-features {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.tier-features li {
+    margin-bottom: 5px;
+}
+
+.selected-summary {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid var(--gold);
+    text-align: center;
+}
+
+.selected-summary span {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.selected-summary strong {
+    font-size: 1.2rem;
+}
+
+.select-indicator {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.6;
+}
+
+.tier-card.selected .select-indicator {
+    color: var(--black);
+    opacity: 1;
+}
+
+.tier-card.selected .tier-features li {
+    color: var(--black);
 }

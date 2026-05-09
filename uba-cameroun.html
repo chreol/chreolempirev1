@@ -108,51 +108,86 @@
             <div id="uba-achat" class="uba-tab-content">
                 <div class="service-info">
                     <h2>Commander une Carte Visa UBA</h2>
-                    <p>Obtenez votre carte physique activée à Douala (Deido).</p>
+                    <p>Obtenez votre carte physique activée à Douala (Deido). Choisissez le segment qui correspond à vos besoins.</p>
+                    
                     <div class="card-tiers">
-                        <div class="tier-card">
-                            <h4>Segment I</h4>
-                            <p>Plafond: 2.5M / mois</p>
-                            <select id="ubaSegment1Val">
-                                <option value="10500">Validité 2 ans - 10 500 FCFA</option>
-                                <option value="12500">Validité 3 ans - 12 500 FCFA</option>
-                            </select>
+                        <div class="tier-card" onclick="selectUbaSegment(this, 'Segment I', 10500)">
+                            <div class="tier-header">
+                                <h4>Segment I</h4>
+                                <p>Usage Standard</p>
+                            </div>
+                            <div class="price">10 500 FCFA</div>
+                            <ul class="tier-features">
+                                <li>Plafond: 2.5M / mois</li>
+                                <li>Validité: 2 ou 3 ans</li>
+                                <li>Activation Immédiate</li>
+                            </ul>
+                            <div class="select-indicator">Sélectionner</div>
                         </div>
-                        <div class="tier-card">
-                            <h4>Segment II</h4>
-                            <p>Plafond: 4.5M / mois</p>
-                            <p class="price">17 500 FCFA</p>
-                            <small>(Frais de gestion: 1000/mois)</small>
+
+                        <div class="tier-card" onclick="selectUbaSegment(this, 'Segment II', 17500)">
+                            <div class="tier-header">
+                                <h4>Segment II</h4>
+                                <p>Usage Avancé</p>
+                            </div>
+                            <div class="price">17 500 FCFA</div>
+                            <ul class="tier-features">
+                                <li>Plafond: 4.5M / mois</li>
+                                <li>Assurance Achats</li>
+                                <li>Frais: 1000/mois</li>
+                            </ul>
+                            <div class="select-indicator">Sélectionner</div>
                         </div>
-                        <div class="tier-card">
-                            <h4>Segment III</h4>
-                            <p>Plafond: 10M / mois</p>
-                            <p class="price">25 000 FCFA</p>
-                            <small>Usage Business</small>
+
+                        <div class="tier-card" onclick="selectUbaSegment(this, 'Segment III', 25000)">
+                            <div class="tier-header">
+                                <h4>Segment III</h4>
+                                <p>Usage Business</p>
+                            </div>
+                            <div class="price">25 000 FCFA</div>
+                            <ul class="tier-features">
+                                <li>Plafond: 10M / mois</li>
+                                <li>Retrait GAB illimités</li>
+                                <li>Priorité Support</li>
+                            </ul>
+                            <div class="select-indicator">Sélectionner</div>
                         </div>
                     </div>
+
                     <div class="docs-needed">
-                        <strong>Documents requis :</strong>
-                        <p><i class="fas fa-check-circle"></i> CNI ou Passeport</p>
-                        <p><i class="fas fa-check-circle"></i> Demi-carte photo</p>
-                        <p><i class="fas fa-check-circle"></i> Plan de localisation</p>
-                        <p><i class="fas fa-check-circle"></i> NUI (Nous pouvons vous aider à l'obtenir)</p>
+                        <strong><i class="fas fa-file-alt"></i> Documents requis pour l'activation :</strong>
+                        <p><i class="fas fa-check-circle"></i> Photocopie CNI ou Passeport valide</p>
+                        <p><i class="fas fa-check-circle"></i> 01 Demi-carte photo couleur</p>
+                        <p><i class="fas fa-check-circle"></i> Plan de localisation succinct</p>
+                        <p><i class="fas fa-check-circle"></i> Numéro NUI (Optionnel, nous vous aidons)</p>
                     </div>
                 </div>
+
                 <div class="order-form">
-                    <div class="form-group">
-                        <label>Choisir le Segment</label>
-                        <select id="ubaSegmentChoice">
-                            <option value="Segment I">Segment I (Usage Standard)</option>
-                            <option value="Segment II">Segment II (Usage Avancé)</option>
-                            <option value="Segment III">Segment III (Usage Business)</option>
+                    <div class="selected-summary" id="selectedSegmentDisplay">
+                        <span>Segment choisi :</span>
+                        <strong id="currentSegmentName">Aucun</strong>
+                    </div>
+                    
+                    <div class="form-group" id="validityGroup" style="display:none;">
+                        <label>Durée de validité</label>
+                        <select id="ubaSegment1Val" onchange="updateSegmentPrice()">
+                            <option value="10500">2 ans - 10 500 FCFA</option>
+                            <option value="12500">3 ans - 12 500 FCFA</option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label>Nom complet (sur la pièce d'identité)</label>
-                        <input type="text" id="ubaOwnerName" placeholder="Votre nom complet">
+                        <label>Nom complet du bénéficiaire</label>
+                        <input type="text" id="ubaOwnerName" placeholder="Tel qu'écrit sur la CNI">
                     </div>
-                    <button class="btn-primary" onclick="addUbaCardToCart()">Commander la Carte</button>
+
+                    <div class="price-display">
+                        <span>Prix de la carte :</span>
+                        <h3 id="ubaCardFinalPrice">0 FCFA</h3>
+                    </div>
+
+                    <button class="btn-primary" onclick="addUbaCardToCart()">Ajouter la carte au Panier</button>
                 </div>
             </div>
         </div>

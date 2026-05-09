@@ -354,33 +354,68 @@ document.addEventListener('DOMContentLoaded', () => {
         window.calculateUbaRecharge();
     };
 
-    window.addUbaCardToCart = function() {
-        const segment = document.getElementById('ubaSegmentChoice').value;
-        const ownerName = document.getElementById('ubaOwnerName').value;
-        let price = 0;
+    let currentUbaSegment = null;
+    let currentUbaPrice = 0;
 
-        if (segment === "Segment I") {
-            price = parseInt(document.getElementById('ubaSegment1Val').value);
-        } else if (segment === "Segment II") {
-            price = 17500;
+    window.selectUbaSegment = function(element, name, price) {
+        // Clear previous selection
+        document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+        
+        // Mark current selection
+        element.classList.add('selected');
+        currentUbaSegment = name;
+        currentUbaPrice = price;
+
+        document.getElementById('currentSegmentName').innerText = name;
+        
+        // Handle Segment I validity choice
+        const validityGroup = document.getElementById('validityGroup');
+        if (name === 'Segment I') {
+            if(validityGroup) validityGroup.style.display = 'block';
+            window.updateSegmentPrice();
         } else {
-            price = 25000;
+            if(validityGroup) validityGroup.style.display = 'none';
+            document.getElementById('ubaCardFinalPrice').innerText = price.toLocaleString('fr-FR') + " FCFA";
+        }
+    };
+
+    window.updateSegmentPrice = function() {
+        if (currentUbaSegment === 'Segment I') {
+            const val = parseInt(document.getElementById('ubaSegment1Val').value);
+            currentUbaPrice = val;
+            document.getElementById('ubaCardFinalPrice').innerText = val.toLocaleString('fr-FR') + " FCFA";
+        }
+    };
+
+    window.addUbaCardToCart = function() {
+        const ownerName = document.getElementById('ubaOwnerName').value;
+
+        if (!currentUbaSegment) {
+            alert("Veuillez sélectionner un segment de carte (Segment I, II ou III).");
+            return;
         }
 
         if (!ownerName) {
-            alert("Veuillez entrer le nom complet pour la carte.");
+            alert("Veuillez entrer le nom complet du bénéficiaire.");
             return;
         }
 
         const item = {
-            title: `Achat Carte UBA (${segment})`,
-            desc: `Propriétaire: ${ownerName}`,
-            totalPrice: price,
+            title: `Achat Carte UBA (${currentUbaSegment})`,
+            desc: `Bénéficiaire: ${ownerName}`,
+            totalPrice: currentUbaPrice,
             qty: 1
         };
 
         window.addGenericToCart(item);
+        
+        // Reset
         document.getElementById('ubaOwnerName').value = "";
+        document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+        currentUbaSegment = null;
+        document.getElementById('currentSegmentName').innerText = "Aucun";
+        document.getElementById('ubaCardFinalPrice').innerText = "0 FCFA";
+        if(document.getElementById('validityGroup')) document.getElementById('validityGroup').style.display = 'none';
     };
 
     // WhatsApp Floating Button opens Contact Modal
