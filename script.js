@@ -305,7 +305,95 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
     };
 
-    // Service Specific Cart Additions
+    // UBA Specific Logic
+    window.switchUbaTab = function(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.uba-tab-content').forEach(c => c.classList.remove('active'));
+        
+        event.currentTarget.classList.add('active');
+        document.getElementById(`uba-${tab}`).classList.add('active');
+    };
+
+    window.calculateUbaRecharge = function() {
+        const amount = parseInt(document.getElementById('ubaRechargeAmount').value) || 0;
+        let fee = 0;
+
+        if (amount > 0) {
+            if (amount <= 20000) fee = 1500;
+            else if (amount <= 50000) fee = 2000;
+            else if (amount <= 100000) fee = Math.round(amount * 0.05);
+            else if (amount <= 350000) fee = Math.round(amount * 0.04);
+            else fee = Math.round(amount * 0.03);
+        }
+
+        const total = amount + fee;
+        document.getElementById('ubaRechargeTotal').innerText = total.toLocaleString('fr-FR') + " FCFA";
+        document.getElementById('ubaRechargeFee').innerText = `(Frais: ${fee.toLocaleString('fr-FR')} FCFA)`;
+        return { amount, fee, total };
+    };
+
+    window.addUbaRechargeToCart = function() {
+        const cardNumber = document.getElementById('ubaCardNumber').value;
+        const { amount, total } = window.calculateUbaRecharge();
+
+        if (!cardNumber || amount <= 0) {
+            alert("Veuillez entrer le numéro de carte et un montant valide.");
+            return;
+        }
+
+        const item = {
+            title: `Recharge UBA: ${amount.toLocaleString('fr-FR')} FCFA`,
+            desc: `Carte: ${cardNumber}`,
+            totalPrice: total,
+            qty: 1
+        };
+
+        window.addGenericToCart(item);
+        document.getElementById('ubaRechargeAmount').value = "";
+        document.getElementById('ubaCardNumber').value = "";
+        window.calculateUbaRecharge();
+    };
+
+    window.addUbaCardToCart = function() {
+        const segment = document.getElementById('ubaSegmentChoice').value;
+        const ownerName = document.getElementById('ubaOwnerName').value;
+        let price = 0;
+
+        if (segment === "Segment I") {
+            price = parseInt(document.getElementById('ubaSegment1Val').value);
+        } else if (segment === "Segment II") {
+            price = 17500;
+        } else {
+            price = 25000;
+        }
+
+        if (!ownerName) {
+            alert("Veuillez entrer le nom complet pour la carte.");
+            return;
+        }
+
+        const item = {
+            title: `Achat Carte UBA (${segment})`,
+            desc: `Propriétaire: ${ownerName}`,
+            totalPrice: price,
+            qty: 1
+        };
+
+        window.addGenericToCart(item);
+        document.getElementById('ubaOwnerName').value = "";
+    };
+
+    // WhatsApp Floating Button opens Contact Modal
+    window.openContactModal = function(e, prefilledMsg = "") {
+        if(e) e.preventDefault();
+        const contactModal = document.getElementById('contactModal');
+        if(contactModal) {
+            contactModal.style.display = "flex";
+            if(prefilledMsg) {
+                document.getElementById('contactMessage').value = prefilledMsg;
+            }
+        }
+    };
     window.addUBAToCart = function() {
         const service = document.getElementById('ubaService').value;
         const details = document.getElementById('ubaAmount').value;
@@ -551,11 +639,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Contact Modal Functions
-window.openContactModal = function(e) {
+window.openContactModal = function(e, prefilledMsg = "") {
     if(e) e.preventDefault();
     const contactModal = document.getElementById('contactModal');
     if(contactModal) {
         contactModal.style.display = "flex";
+        if(prefilledMsg) {
+            document.getElementById('contactMessage').value = prefilledMsg;
+        }
     }
 };
 

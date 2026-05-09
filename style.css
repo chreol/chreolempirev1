@@ -909,6 +909,8 @@ footer {
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
+    cursor: pointer; /* Ensure pointer for buttons */
+    border: none; /* Remove default button border */
 }
 
 .cart-float {
@@ -1080,7 +1082,117 @@ footer {
     font-size: 0.9rem;
     color: var(--text-muted);
 }
+/* UBA Page Specifics */
+.service-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
 
+.tab-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: var(--text);
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.tab-btn.active {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.uba-tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.uba-tab-content.active {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.price-grid {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.price-grid li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.price-grid li strong {
+    color: var(--gold);
+}
+
+.card-tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.tier-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    text-align: center;
+}
+
+.tier-card h4 {
+    color: var(--gold);
+    margin-bottom: 5px;
+}
+
+.tier-card .price {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 10px 0;
+}
+
+.docs-needed {
+    background: rgba(212, 175, 55, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    border-left: 4px solid var(--gold);
+}
+
+.docs-needed i {
+    color: var(--gold);
+    margin-right: 10px;
+}
+
+.price-display {
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    border: 1px dashed var(--gold);
+}
+
+@media (max-width: 992px) {
+    .uba-tab-content.active {
+        grid-template-columns: 1fr;
+    }
+    .card-tiers {
+        grid-template-columns: 1fr;
+    }
+}
 .cart-item-price {
     font-weight: bold;
     font-size: 1.1rem;

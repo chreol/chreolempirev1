@@ -65,25 +65,98 @@
     <section class="card-selection" id="commander">
         <h2>Service UBA Cameroun</h2>
         <div class="form-container">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="ubaService">Service</label>
-                    <select id="ubaService">
-                        <option value="Achat Carte Visa UBA">Achat de Carte Visa UBA (10 500 FCFA)</option>
-                        <option value="Recharge Carte Visa UBA">Recharge de Carte Visa UBA</option>
-                    </select>
+            <!-- UBA Service Section -->
+    <section class="service-detail">
+        <div class="service-container">
+            <div class="service-tabs">
+                <button class="tab-btn active" onclick="switchUbaTab('recharge')">Recharger ma Carte</button>
+                <button class="tab-btn" onclick="switchUbaTab('achat')">Acheter une Carte</button>
+            </div>
+
+            <!-- Recharge Form -->
+            <div id="uba-recharge" class="uba-tab-content active">
+                <div class="service-info">
+                    <h2>Recharge Carte Visa UBA</h2>
+                    <p>Alimentez votre carte ou compte UBA instantanément via Mobile Money (MTN/Orange).</p>
+                    <ul class="price-grid">
+                        <li><span>1 500 - 20 000 FCFA</span> <strong>+1 500 FCFA</strong></li>
+                        <li><span>20 001 - 50 000 FCFA</span> <strong>+2 000 FCFA</strong></li>
+                        <li><span>50 001 - 100 000 FCFA</span> <strong>5% de frais</strong></li>
+                        <li><span>100 001 - 350 000 FCFA</span> <strong>4% de frais</strong></li>
+                        <li><span>350 001 - 500 000 FCFA</span> <strong>3% de frais</strong></li>
+                    </ul>
                 </div>
-                <div class="form-group">
-                    <label for="ubaAmount">Montant / Détails</label>
-                    <input type="text" id="ubaAmount" placeholder="Ex: 50 000 FCFA ou Détails" required>
-                </div>
-                <div class="form-group">
-                    <label for="ubaQty">Quantité</label>
-                    <input type="number" id="ubaQty" value="1" min="1">
+                <div class="order-form">
+                    <div class="form-group">
+                        <label>Numéro de la Carte (ou Compte)</label>
+                        <input type="text" id="ubaCardNumber" placeholder="Ex: 4xxx xxxx xxxx xxxx">
+                    </div>
+                    <div class="form-group">
+                        <label>Montant à Recharger (FCFA)</label>
+                        <input type="number" id="ubaRechargeAmount" placeholder="Ex: 50000" oninput="calculateUbaRecharge()">
+                    </div>
+                    <div class="price-display">
+                        <span>Total à payer :</span>
+                        <h3 id="ubaRechargeTotal">0 FCFA</h3>
+                        <small id="ubaRechargeFee">(Frais inclus)</small>
+                    </div>
+                    <button class="btn-primary" onclick="addUbaRechargeToCart()">Ajouter au Panier</button>
                 </div>
             </div>
-            
-            <button class="btn-wa" onclick="addUBAToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-bottom: 20px;">Ajouter au panier <i class="fas fa-cart-plus"></i></button>
+
+            <!-- Achat Form -->
+            <div id="uba-achat" class="uba-tab-content">
+                <div class="service-info">
+                    <h2>Commander une Carte Visa UBA</h2>
+                    <p>Obtenez votre carte physique activée à Douala (Deido).</p>
+                    <div class="card-tiers">
+                        <div class="tier-card">
+                            <h4>Segment I</h4>
+                            <p>Plafond: 2.5M / mois</p>
+                            <select id="ubaSegment1Val">
+                                <option value="10500">Validité 2 ans - 10 500 FCFA</option>
+                                <option value="12500">Validité 3 ans - 12 500 FCFA</option>
+                            </select>
+                        </div>
+                        <div class="tier-card">
+                            <h4>Segment II</h4>
+                            <p>Plafond: 4.5M / mois</p>
+                            <p class="price">17 500 FCFA</p>
+                            <small>(Frais de gestion: 1000/mois)</small>
+                        </div>
+                        <div class="tier-card">
+                            <h4>Segment III</h4>
+                            <p>Plafond: 10M / mois</p>
+                            <p class="price">25 000 FCFA</p>
+                            <small>Usage Business</small>
+                        </div>
+                    </div>
+                    <div class="docs-needed">
+                        <strong>Documents requis :</strong>
+                        <p><i class="fas fa-check-circle"></i> CNI ou Passeport</p>
+                        <p><i class="fas fa-check-circle"></i> Demi-carte photo</p>
+                        <p><i class="fas fa-check-circle"></i> Plan de localisation</p>
+                        <p><i class="fas fa-check-circle"></i> NUI (Nous pouvons vous aider à l'obtenir)</p>
+                    </div>
+                </div>
+                <div class="order-form">
+                    <div class="form-group">
+                        <label>Choisir le Segment</label>
+                        <select id="ubaSegmentChoice">
+                            <option value="Segment I">Segment I (Usage Standard)</option>
+                            <option value="Segment II">Segment II (Usage Avancé)</option>
+                            <option value="Segment III">Segment III (Usage Business)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom complet (sur la pièce d'identité)</label>
+                        <input type="text" id="ubaOwnerName" placeholder="Votre nom complet">
+                    </div>
+                    <button class="btn-primary" onclick="addUbaCardToCart()">Commander la Carte</button>
+                </div>
+            </div>
+        </div>
+    </section>
             
             <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
                 <h3 style="color: var(--gold); margin-bottom: 15px;">Votre Panier</h3>
@@ -223,10 +296,10 @@
             <i class="fas fa-shopping-cart"></i>
             <span class="cart-count-badge" id="cartFloatCount">0</span>
         </a>
-        <a href="https://wa.me/237697657734" class="wa-float" target="_blank">
+        <div class="wa-float" onclick="openContactModal(event)">
             <i class="fab fa-whatsapp"></i>
             <span class="wa-tooltip">Besoin d'aide ? Contactez-nous</span>
-        </a>
+        </div>
     </div>
 
     <!-- Image Modal -->
