@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chreol Empire | Cartes Cadeaux & Services Digitaux</title>
+    <title>Chreol Empire | UBA Cameroun</title>
     <meta name="description"
         content="Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et autres. Livraison rapide par email, WhatsApp, SMS.">
     <link rel="stylesheet" href="style.css">
@@ -47,11 +47,9 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Le Premium des Services Digitaux</h1>
-            <p>Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et bien plus. Livraison express garantie
-                par Email, WhatsApp ou SMS.</p>
-            <a href="cartes-cadeaux.html" class="cta-button">Commander Maintenant <i
-                    class="fas fa-arrow-right"></i></a>
+            <h1>Cartes Visa UBA Cameroun</h1>
+            <p>Achat et recharge instantanée de vos cartes Visa prépayées UBA. Sécurisé, rapide et fiable.</p>
+            <a href="#commander" class="cta-button">Commander / Recharger <i class="fas fa-credit-card"></i></a>
         </div>
         <div class="hero-image">
             <div class="card-stack" id="heroCardStack">
@@ -67,7 +65,57 @@
         </div>
     </section>
 
-    <!-- Formulaire déplacé vers cartes-cadeaux.html -->
+    <!-- Selection Form -->
+    <section class="card-selection" id="commander">
+        <h2>Service UBA Cameroun</h2>
+        <div class="form-container">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="ubaService">Service</label>
+                    <select id="ubaService">
+                        <option value="Achat Carte Visa UBA">Achat de Carte Visa UBA (10 500 FCFA)</option>
+                        <option value="Recharge Carte Visa UBA">Recharge de Carte Visa UBA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ubaAmount">Montant / Détails</label>
+                    <input type="text" id="ubaAmount" placeholder="Ex: 50 000 FCFA ou Détails" required>
+                </div>
+                <div class="form-group">
+                    <label for="ubaQty">Quantité</label>
+                    <input type="number" id="ubaQty" value="1" min="1">
+                </div>
+            </div>
+            
+            <button class="btn-wa" onclick="addUBAToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-bottom: 20px;">Ajouter au panier <i class="fas fa-cart-plus"></i></button>
+            
+            <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
+                <h3 style="color: var(--gold); margin-bottom: 15px;">Votre Panier</h3>
+                <div id="cartItems" style="margin-bottom: 20px;"></div>
+                
+                <div class="price-display" style="background: rgba(212, 175, 55, 0.15);">
+                    <div class="price-label">Prix Total du Panier</div>
+                    <div class="price-amount" id="cartTotalPrice">0 FCFA</div>
+                </div>
+
+                <div class="payment-section">
+                    <label>Mode de Paiement</label>
+                    <div class="payment-grid">
+                        <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
+                        <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
+                    </div>
+                    
+                    <div class="ussd-box" id="ussdBox" style="display: none;">
+                        <div id="ussdInfo"></div>
+                        <div class="ussd-code" id="ussdCode"></div>
+                        <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
+                    </div>
+                </div>
+
+                <button class="btn-wa" onclick="sendOrder()">Finaliser la commande sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+            </div>
+        </div>
+    </section>
 
     <!-- Comment ça marche -->
     <section id="comment-ca-marche" class="how-it-works">

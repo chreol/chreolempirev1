@@ -66,7 +66,25 @@ document.addEventListener('DOMContentLoaded', () => {
         robux: ["ROBUX"]
     };
 
-    window.cart = [];
+    let savedCart = localStorage.getItem('chreol_cart');
+    window.cart = savedCart ? JSON.parse(savedCart) : [];
+
+    window.saveCart = function() {
+        localStorage.setItem('chreol_cart', JSON.stringify(window.cart));
+    };
+
+    window.addGenericToCart = function(item) {
+        window.cart.push(item);
+        window.saveCart();
+        window.renderCart();
+    };
+
+    // Render cart on page load if the elements exist
+    document.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById('cartItems')) {
+            window.renderCart();
+        }
+    });
 
     window.initValues = function() {
         const typeEl = document.getElementById('cardType');
@@ -150,17 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPrice = unitPrice * qty;
 
         const item = {
-            category,
-            exactCard,
-            currency,
-            valChoice,
-            qty,
-            unitPrice,
-            totalPrice
+            title: `${qty}x ${exactCard} (${category})`,
+            desc: `${valChoice} | ${currency}`,
+            totalPrice: totalPrice,
+            qty: qty
         };
 
-        window.cart.push(item);
-        window.renderCart();
+        window.addGenericToCart(item);
         
         // Reset form
         typeEl.value = "";
@@ -189,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
             html += `
                 <div class="cart-item">
                     <div class="cart-item-details">
-                        <div class="cart-item-title">${item.qty}x ${item.exactCard}</div>
-                        <div class="cart-item-desc">${item.valChoice} | ${item.currency}</div>
+                        <div class="cart-item-title">${item.title}</div>
+                        <div class="cart-item-desc">${item.desc}</div>
                     </div>
                     <div class="cart-item-price">${item.totalPrice.toLocaleString('fr-FR')} FCFA</div>
                     <button class="btn-remove-cart" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
@@ -205,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.removeFromCart = function(index) {
         window.cart.splice(index, 1);
+        window.saveCart();
         window.renderCart();
     };
 
@@ -256,15 +271,109 @@ document.addEventListener('DOMContentLoaded', () => {
         window.cart.forEach((item, index) => {
             grandTotal += item.totalPrice;
             orderDetails += `*Article ${index + 1} :*%0A`;
-            orderDetails += `- ${item.qty}x ${item.exactCard} (${item.category})%0A`;
-            orderDetails += `- Valeur : ${item.valChoice}%0A`;
-            orderDetails += `- Pays/Devise : ${item.currency}%0A`;
+            orderDetails += `- ${item.title}%0A`;
+            orderDetails += `- Détails : ${item.desc}%0A`;
             orderDetails += `- Prix : ${item.totalPrice.toLocaleString('fr-FR')} FCFA%0A%0A`;
         });
 
         const msg = `Bonjour 👋%0AJe souhaite valider ma commande :%0A%0A*ID Transaction : ${transactionId}*%0A%0A${orderDetails}*Total à valider : ${grandTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode de paiement : ${currentMethod}%0A%0AVoici ma capture d'écran de paiement ci-jointe ⬇️`;
         
+        window.cart = []; // Empty cart after order
+        window.saveCart();
+        window.renderCart();
+        
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
+    };
+
+    // Service Specific Cart Additions
+    window.addUBAToCart = function() {
+        const service = document.getElementById('ubaService').value;
+        const details = document.getElementById('ubaAmount').value;
+        const qty = parseInt(document.getElementById('ubaQty').value) || 1;
+
+        if (!details) {
+            alert("Veuillez préciser le montant ou les détails.");
+            return;
+        }
+
+        let price = (service === "Achat Carte Visa UBA") ? 10500 : 0;
+        let numDetails = parseInt(details.replace(/[^0-9]/g, ''));
+        if (!isNaN(numDetails) && service !== "Achat Carte Visa UBA") {
+            price = numDetails;
+        }
+
+        const item = {
+            title: `${qty}x ${service}`,
+            desc: `Détails: ${details}`,
+            totalPrice: price * qty,
+            qty: qty
+        };
+
+        window.addGenericToCart(item);
+        document.getElementById('ubaAmount').value = "";
+    };
+
+    window.addPayPalToCart = function() {
+        const service = document.getElementById('paypalService').value;
+        const amount = document.getElementById('paypalAmount').value;
+        const email = document.getElementById('paypalEmail').value;
+
+        if (!amount || !email) {
+            alert("Veuillez remplir le montant et l'email.");
+            return;
+        }
+
+        const item = {
+            title: `PayPal: ${service}`,
+            desc: `Montant: ${amount} | Email: ${email}`,
+            totalPrice: 0,
+            qty: 1
+        };
+
+        window.addGenericToCart(item);
+        document.getElementById('paypalAmount').value = "";
+        document.getElementById('paypalEmail').value = "";
+    };
+
+    window.addCryptoToCart = function() {
+        const coin = document.getElementById('cryptoCoin').value;
+        const type = document.getElementById('cryptoType').value;
+        const amount = document.getElementById('cryptoAmount').value;
+
+        if (!amount) {
+            alert("Veuillez entrer le montant.");
+            return;
+        }
+
+        const item = {
+            title: `${type} ${coin}`,
+            desc: `Montant: ${amount}`,
+            totalPrice: 0,
+            qty: 1
+        };
+
+        window.addGenericToCart(item);
+        document.getElementById('cryptoAmount').value = "";
+    };
+
+    window.addCouponToCart = function() {
+        const type = document.getElementById('couponType').value;
+        const value = document.getElementById('couponValue').value;
+
+        if (!value) {
+            alert("Veuillez entrer la valeur du coupon.");
+            return;
+        }
+
+        const item = {
+            title: `Coupon ${type}`,
+            desc: `Valeur: ${value}`,
+            totalPrice: 0,
+            qty: 1
+        };
+
+        window.addGenericToCart(item);
+        document.getElementById('couponValue').value = "";
     };
 
     // Hero Cards Animation & Swiping
