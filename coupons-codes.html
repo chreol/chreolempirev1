@@ -61,53 +61,83 @@
         </div>
     </section>
 
-    <!-- Selection Form -->
+    <!-- Exchange Form -->
     <section class="card-selection" id="commander">
-        <h2>Service Coupons</h2>
+        <h2>Échangez vos Coupons</h2>
         <div class="form-container">
+
+            <!-- Taux du jour -->
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 20px; margin-bottom: 30px;">
+                <div style="text-align: center; flex: 1; min-width: 120px;">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">PCS Mastercard</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">440 <span style="color: var(--gold);">FCFA</span>/€</div>
+                </div>
+                <div style="width: 1px; background: rgba(212,175,55,0.2); align-self: stretch;"></div>
+                <div style="text-align: center; flex: 1; min-width: 120px;">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">Transcash</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">430 <span style="color: var(--gold);">FCFA</span>/€</div>
+                </div>
+            </div>
+
+            <!-- Section 1 : Détails coupon -->
+            <h3 style="color: var(--gold); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;">🏷️ Détails du Coupon</h3>
+
             <div class="form-grid">
                 <div class="form-group">
                     <label for="couponType">Type de Coupon</label>
-                    <select id="couponType">
-                        <option value="PCS Mastercard">PCS Mastercard</option>
+                    <select id="couponType" onchange="calculateCouponNet()">
+                        <option value="PCS">PCS Mastercard</option>
                         <option value="Transcash">Transcash</option>
-                        <option value="Neosurf">Neosurf</option>
-                        <option value="Autre">Autre Coupon</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="couponValue">Valeur du coupon (ex: 20€)</label>
-                    <input type="text" id="couponValue" placeholder="Ex: 50€" required>
+                    <label for="couponValue">Valeur totale du/des coupon(s) (€ Euro)</label>
+                    <input type="number" id="couponValue" placeholder="Ex: 50" min="10" step="5" oninput="calculateCouponNet()">
                 </div>
             </div>
-            
-            <button class="btn-wa" onclick="addCouponToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-bottom: 20px;">Ajouter au panier <i class="fas fa-cart-plus"></i></button>
-            
-            <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
-                <h3 style="color: var(--gold); margin-bottom: 15px;">Votre Panier</h3>
-                <div id="cartItems" style="margin-bottom: 20px;"></div>
-                
-                <div class="price-display" style="background: rgba(212, 175, 55, 0.15);">
-                    <div class="price-label">Prix Total du Panier</div>
-                    <div class="price-amount" id="cartTotalPrice">0 FCFA</div>
-                </div>
 
-                <div class="payment-section">
-                    <label>Mode de Paiement</label>
-                    <div class="payment-grid">
-                        <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
-                        <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
-                    </div>
-                    
-                    <div class="ussd-box" id="ussdBox" style="display: none;">
-                        <div id="ussdInfo"></div>
-                        <div class="ussd-code" id="ussdCode"></div>
-                        <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
-                    </div>
-                </div>
-
-                <button class="btn-wa" onclick="sendOrder()">Finaliser la commande sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+            <div class="form-group" style="margin-bottom: 28px;">
+                <label for="couponCodes">Entrez le(s) code(s) de coupon</label>
+                <textarea id="couponCodes" rows="4" placeholder="Un code par ligne si vous avez plusieurs coupons&#10;Ex: 4111-2233-4455-6677&#10;    5522-3344-5566-7788" style="resize: vertical; min-height: 110px;"></textarea>
+                <small style="color: var(--text-muted); font-size: 0.8rem; margin-top: 6px; display: block;">💡 Plusieurs coupons ? Entrez un code par ligne.</small>
             </div>
+
+            <!-- Section 2 : Mobile Money -->
+            <h3 style="color: var(--gold); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;">📱 Réception Mobile Money</h3>
+
+            <div class="form-group">
+                <label for="couponBeneficiary">Nom &amp; Prénom du bénéficiaire</label>
+                <input type="text" id="couponBeneficiary" placeholder="Ex: Jean Dupont">
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="couponNetwork">Réseau Mobile</label>
+                    <select id="couponNetwork">
+                        <option value="Orange Money">🟠 ORANGE Money</option>
+                        <option value="MTN Money">🟡 MTN Money</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="couponPhone">Numéro de téléphone</label>
+                    <input type="tel" id="couponPhone" placeholder="Ex: 697 657 734" maxlength="9" inputmode="numeric">
+                </div>
+            </div>
+
+            <!-- Montant net -->
+            <div class="price-display" style="background: rgba(37,211,102,0.07); border-color: rgba(37,211,102,0.35); margin-top: 10px;">
+                <div class="price-label" style="color: #25D366;">💰 Montant net à recevoir</div>
+                <div class="price-amount" id="couponNetAmount">0 FCFA</div>
+                <small id="couponRateInfo" style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-top: 6px; display: block;"></small>
+            </div>
+
+            <!-- Avertissement -->
+            <div class="screenshot-notice" style="margin-top: 20px; margin-bottom: 20px;">
+                ⚠️ <b>IMPORTANT :</b> Après validation, envoyez la <b>capture d'écran du/des coupon(s)</b> sur WhatsApp. Le paiement Mobile Money sera effectué dès vérification des codes.
+            </div>
+
+            <!-- Bouton envoi -->
+            <button class="btn-wa" onclick="sendCouponOrder()">✅ Valider l'échange sur WhatsApp <i class="fab fa-whatsapp"></i></button>
         </div>
     </section>
 

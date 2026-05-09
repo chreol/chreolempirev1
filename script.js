@@ -552,6 +552,52 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('couponValue').value = "";
     };
 
+    // --- COUPON EXCHANGE (coupons-codes.html) ---
+    const couponRates = { PCS: 440, Transcash: 430 };
+
+    window.calculateCouponNet = function() {
+        const typeEl = document.getElementById('couponType');
+        const valueEl = document.getElementById('couponValue');
+        const netEl = document.getElementById('couponNetAmount');
+        const rateEl = document.getElementById('couponRateInfo');
+        if (!netEl) return;
+
+        const type = typeEl ? typeEl.value : 'PCS';
+        const value = parseFloat(valueEl ? valueEl.value : 0) || 0;
+        const rate = couponRates[type] || 440;
+        const net = Math.floor(value * rate);
+
+        netEl.innerText = net > 0 ? net.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
+        if (rateEl) {
+            rateEl.innerText = value > 0
+                ? `Calcul : ${value} € × ${rate} FCFA/€ = ${net.toLocaleString('fr-FR')} FCFA`
+                : '';
+        }
+    };
+
+    window.sendCouponOrder = function() {
+        const type = document.getElementById('couponType')?.value;
+        const value = document.getElementById('couponValue')?.value?.trim();
+        const codes = document.getElementById('couponCodes')?.value?.trim();
+        const beneficiary = document.getElementById('couponBeneficiary')?.value?.trim();
+        const network = document.getElementById('couponNetwork')?.value;
+        const phone = document.getElementById('couponPhone')?.value?.trim();
+
+        if (!value || !codes || !beneficiary || !phone) {
+            alert("Veuillez remplir tous les champs obligatoires (valeur, code(s), nom, téléphone).");
+            return;
+        }
+
+        const rate = couponRates[type] || 440;
+        const net = Math.floor(parseFloat(value) * rate);
+        const typeFull = type === 'PCS' ? 'PCS Mastercard' : 'Transcash';
+        const codesEncoded = codes.split('\n').map(l => encodeURIComponent(l.trim())).filter(Boolean).join('%0A');
+
+        const msg = `Bonjour%20%F0%9F%91%8B%0A*Demande%20d%27%C3%A9change%20de%20coupon*%0A%0A%F0%9F%8F%B7%EF%B8%8F%20*Type%20:*%20${encodeURIComponent(typeFull)}%0A%F0%9F%92%B6%20*Valeur%20totale%20:*%20${encodeURIComponent(value)}%E2%82%AC%0A%F0%9F%94%91%20*Code(s)%20:*%0A${codesEncoded}%0A%0A%F0%9F%93%B1%20*R%C3%A9ception%20Mobile%20Money%20:*%0A*Nom%20:*%20${encodeURIComponent(beneficiary)}%0A*R%C3%A9seau%20:*%20${encodeURIComponent(network)}%0A*N%C2%B0%20:*%20${encodeURIComponent(phone)}%0A%0A%F0%9F%92%B0%20*Montant%20net%20attendu%20:*%20${net.toLocaleString('fr-FR')}%20FCFA`;
+
+        window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
+    };
+
     // Hero Cards Animation & Swiping
     const cards = document.querySelectorAll('.card-stack .card');
     const cardStack = document.getElementById('heroCardStack');
