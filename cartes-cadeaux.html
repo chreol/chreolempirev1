@@ -8,7 +8,7 @@
     <meta name="description"
         content="Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et autres. Livraison rapide par email, WhatsApp, SMS.">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700;1,900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/jpeg" href="img/logo.jpg">
     <link rel="shortcut icon" href="img/logo.jpg" type="image/x-icon">
@@ -55,7 +55,7 @@
             <h1>Le Premium des Services Digitaux</h1>
             <p>Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et bien plus. Livraison express garantie
                 par Email, WhatsApp ou SMS.</p>
-            <a href="https://wa.me/237697657734" target="_blank" class="cta-button">Commander Maintenant <i
+            <a href="https://wa.me/237697657734" target="_blank" rel="noopener noreferrer" class="cta-button">Commander Maintenant <i
                     class="fab fa-whatsapp"></i></a>
         </div>
         <div class="hero-image">
@@ -245,18 +245,18 @@
             <div class="footer-links">
                 <h4>Contactez-nous</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/Chreol+EMPIRE+Vallée+3+Deido+Douala/" target="_blank">Vallée 3, Boutiques Deido, Douala</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/Chreol+EMPIRE+Vallée+3+Deido+Douala/" target="_blank" rel="noopener noreferrer">Vallée 3, Boutiques Deido, Douala</a></li>
                     <li><i class="fas fa-phone"></i> <a href="tel:+237694360978">+237 694 360 978</a></li>
-                    <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/237697657734" target="_blank">+237 697 657 734</a></li>
+                    <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/237697657734" target="_blank" rel="noopener noreferrer">+237 697 657 734</a></li>
                     <li><i class="fas fa-envelope"></i> <a href="mailto:chreolempire00@gmail.com">chreolempire00@gmail.com</a></li>
                 </ul>
             </div>
             <div class="footer-socials">
                 <h4>Suivez-nous</h4>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/chreolempire" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/chreolempire" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://t.me/chreolempireBot" target="_blank" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://www.facebook.com/chreolempire" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/chreolempire" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/chreolempireBot" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
                 </div>
             </div>
         </div>
@@ -306,6 +306,18 @@
             <button onclick="sendContactWhatsApp()" class="btn-wa">Envoyer le message <i class="fab fa-whatsapp"></i></button>
         </div>
     </div>
+
+    <!-- SVG Noise Overlay -->
+    <svg style="display: none;">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.05" />
+            </feComponentTransfer>
+        </filter>
+    </svg>
+    <div class="noise-overlay"></div>
 
     <script src="script.js"></script>
 </body>

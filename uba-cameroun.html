@@ -4,15 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chreol Empire | UBA Cameroun</title>
-    <meta name="description"
-        content="Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et autres. Livraison rapide par email, WhatsApp, SMS.">
+    <title>Chreol Empire | UBA Cameroun — Cartes Visa Prépayées</title>
+    <meta name="description" content="Achat et recharge de cartes Visa prépayées UBA au Cameroun. Segments I, II et III. Paiement Mobile Money MTN/Orange. Livraison rapide à Douala.">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700;1,900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/jpeg" href="img/logo.jpg">
     <link rel="shortcut icon" href="img/logo.jpg" type="image/x-icon">
     <link rel="apple-touch-icon" href="img/logo.jpg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 
 <body>
@@ -33,11 +34,11 @@
             <div class="dropdown">
                 <a href="#" class="dropbtn">Services <i class="fas fa-caret-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="cartes-cadeaux.html">Cartes Cadeaux & Jeux</a>
+                    <a href="cartes-cadeaux.html">Cartes Cadeaux &amp; Jeux</a>
                     <a href="uba-cameroun.html">UBA Cameroun</a>
-                    <a href="coupons-codes.html">Coupons & Codes</a>
+                    <a href="coupons-codes.html">Coupons &amp; Codes</a>
                     <a href="paypal.html">PayPal Europe</a>
-                    <a href="crypto.html">Crypto & Monnaies</a>
+                    <a href="crypto.html">Crypto &amp; Monnaies</a>
                 </div>
             </div>
             <a href="index.html#temoignages">Avis</a>
@@ -61,142 +62,200 @@
         </div>
     </section>
 
-    <!-- Selection Form -->
-    <section class="card-selection" id="commander">
-        <h2>Service UBA Cameroun</h2>
-        <div class="form-container">
-            <!-- UBA Service Section -->
-    <section class="service-detail">
+    <!-- ====== SERVICE UBA SECTION ====== -->
+    <section class="service-detail" id="commander">
         <div class="service-container">
+
+            <!-- Tabs -->
             <div class="service-tabs">
-                <button class="tab-btn active" onclick="switchUbaTab('recharge')">Recharger ma Carte</button>
-                <button class="tab-btn" onclick="switchUbaTab('achat')">Acheter une Carte</button>
+                <button class="tab-btn active" id="tab-recharge" onclick="switchUbaTab(this, 'recharge')">
+                    <i class="fas fa-sync-alt"></i> Recharger ma Carte
+                </button>
+                <button class="tab-btn" id="tab-achat" onclick="switchUbaTab(this, 'achat')">
+                    <i class="fas fa-credit-card"></i> Acheter une Carte
+                </button>
             </div>
 
-            <!-- Recharge Form -->
+            <!-- ===== RECHARGE TAB ===== -->
             <div id="uba-recharge" class="uba-tab-content active">
-                <div class="service-info">
-                    <h2>Recharge Carte Visa UBA</h2>
-                    <p>Alimentez votre carte ou compte UBA instantanément via Mobile Money (MTN/Orange).</p>
-                    <ul class="price-grid">
-                        <li><span>1 500 - 20 000 FCFA</span> <strong>+1 500 FCFA</strong></li>
-                        <li><span>20 001 - 50 000 FCFA</span> <strong>+2 000 FCFA</strong></li>
-                        <li><span>50 001 - 100 000 FCFA</span> <strong>5% de frais</strong></li>
-                        <li><span>100 001 - 350 000 FCFA</span> <strong>4% de frais</strong></li>
-                        <li><span>350 001 - 500 000 FCFA</span> <strong>3% de frais</strong></li>
-                    </ul>
-                </div>
-                <div class="order-form">
-                    <div class="form-group">
-                        <label>Numéro de la Carte (ou Compte)</label>
-                        <input type="text" id="ubaCardNumber" placeholder="Ex: 4xxx xxxx xxxx xxxx">
+                <div class="service-layout">
+
+                    <!-- Left: Info tarifs -->
+                    <div class="service-info">
+                        <h2>Recharge Carte Visa UBA</h2>
+                        <p style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 20px;">
+                            Alimentez votre carte UBA instantanément via Mobile Money (MTN / Orange).
+                        </p>
+                        <h4 style="color: var(--gold); margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Grille de frais</h4>
+                        <ul class="price-grid">
+                            <li><span>1 500 – 20 000 FCFA</span> <strong>+1 500 FCFA</strong></li>
+                            <li><span>20 001 – 50 000 FCFA</span> <strong>+2 000 FCFA</strong></li>
+                            <li><span>50 001 – 100 000 FCFA</span> <strong>5% de frais</strong></li>
+                            <li><span>100 001 – 350 000 FCFA</span> <strong>4% de frais</strong></li>
+                            <li><span>350 001 – 500 000 FCFA</span> <strong>3% de frais</strong></li>
+                        </ul>
                     </div>
-                    <div class="form-group">
-                        <label>Montant à Recharger (FCFA)</label>
-                        <input type="number" id="ubaRechargeAmount" placeholder="Ex: 50000" oninput="calculateUbaRecharge()">
+
+                    <!-- Right: Form -->
+                    <div class="order-form">
+                        <div style="background: #C0392B; color: #fff; padding: 14px 18px; border-radius: 10px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.5; border-left: 5px solid #F1C40F;">
+                            <i class="fas fa-lock"></i> <strong>Sécurité :</strong> Vos données de carte sont utilisées uniquement pour identifier le compte à créditer. Nous ne stockons aucune information sensible.
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>6 PREMIERS CHIFFRES *</label>
+                                <input type="text" id="ubaCard6" placeholder="Ex: 402156" maxlength="6" inputmode="numeric">
+                            </div>
+                            <div class="form-group">
+                                <label>4 DERNIERS CHIFFRES *</label>
+                                <input type="text" id="ubaCard4" placeholder="Ex: 1121" maxlength="4" inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ID CLIENT (AU DOS DE LA CARTE) *</label>
+                            <input type="text" id="ubaClientId" placeholder="10 chiffres au dos de la carte" maxlength="10" inputmode="numeric">
+                        </div>
+
+                        <div class="form-group">
+                            <label>MONTANT À CRÉDITER (FCFA) *</label>
+                            <input type="number" id="ubaRechargeAmount" placeholder="Minimum 1 500 F" min="1500" oninput="calculateUbaRecharge()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>NOM &amp; PRÉNOM *</label>
+                            <input type="text" id="ubaFullName" placeholder="Ex: Jean Dupont">
+                        </div>
+
+                        <div class="form-group">
+                            <label>NUMÉRO DE TÉLÉPHONE *</label>
+                            <input type="tel" id="ubaPhone" placeholder="Ex: 697657734" maxlength="9">
+                        </div>
+
+                        <div class="price-display" style="margin-top: 24px; padding: 20px; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.2); border-radius: 14px;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Total à payer (frais inclus) :</span>
+                            <h3 id="ubaRechargeTotal" style="font-size: 2.2rem; color: var(--gold); margin: 6px 0;">0 FCFA</h3>
+                            <small id="ubaRechargeFee" style="color: var(--gold-light); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;"></small>
+                        </div>
+
+                        <button class="btn-primary" style="margin-top: 20px; width: 100%;" onclick="addUbaRechargeToCart()">
+                            <i class="fas fa-cart-plus"></i> Ajouter au Panier
+                        </button>
                     </div>
-                    <div class="price-display">
-                        <span>Total à payer :</span>
-                        <h3 id="ubaRechargeTotal">0 FCFA</h3>
-                        <small id="ubaRechargeFee">(Frais inclus)</small>
-                    </div>
-                    <button class="btn-primary" onclick="addUbaRechargeToCart()">Ajouter au Panier</button>
                 </div>
             </div>
 
-            <!-- Achat Form -->
-            <div id="uba-achat" class="uba-tab-content">
-                <div class="service-info">
-                    <h2>Commander une Carte Visa UBA</h2>
-                    <p>Obtenez votre carte physique activée à Douala (Deido). Choisissez le segment qui correspond à vos besoins.</p>
-                    
-                    <div class="card-tiers">
-                        <div class="tier-card" onclick="selectUbaSegment(this, 'Segment I', 10500)">
-                            <div class="tier-header">
-                                <h4>Segment I</h4>
-                                <p>Usage Standard</p>
+            <!-- ===== ACHAT TAB ===== -->
+            <div id="uba-achat" class="uba-tab-content" style="display:none; opacity:0;">
+                <div class="service-layout">
+
+                    <!-- Left: Segments + Docs -->
+                    <div class="service-info">
+                        <h2>Commander une Carte Visa UBA</h2>
+                        <p style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 24px;">
+                            Obtenez votre carte physique activée à Douala (Deido). Choisissez le segment adapté.
+                        </p>
+
+                        <div class="card-tiers">
+                            <div class="tier-card" id="seg-card-1" onclick="selectUbaSegment(this, 'seg1')">
+                                <div class="tier-header">
+                                    <h4>Segment I</h4>
+                                    <p>Usage Standard</p>
+                                </div>
+                                <div class="price">10 500 FCFA</div>
+                                <ul class="tier-features">
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Plafond: 2.5M / mois</li>
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Validité: 2 ou 3 ans</li>
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Activation: 15 min (Deido)</li>
+                                </ul>
+                                <div class="select-indicator">Sélectionner</div>
                             </div>
-                            <div class="price">10 500 FCFA</div>
-                            <ul class="tier-features">
-                                <li>Plafond: 2.5M / mois</li>
-                                <li>Validité: 2 ou 3 ans</li>
-                                <li>Activation Immédiate</li>
-                            </ul>
-                            <div class="select-indicator">Sélectionner</div>
+
+                            <div class="tier-card" id="seg-card-2" onclick="selectUbaSegment(this, 'seg2')">
+                                <div class="tier-header">
+                                    <h4>Segment II</h4>
+                                    <p>Usage Avancé</p>
+                                </div>
+                                <div class="price">17 500 FCFA</div>
+                                <ul class="tier-features">
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Plafond: 4.5M / mois</li>
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Assurance Achats</li>
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Activation Express</li>
+                                </ul>
+                                <div class="select-indicator">Sélectionner</div>
+                            </div>
+
+                            <div class="tier-card" id="seg-card-3" onclick="selectUbaSegment(this, 'seg3')">
+                                <div class="tier-header">
+                                    <h4>Segment III</h4>
+                                    <p>Usage Business</p>
+                                </div>
+                                <div class="price">25 000 FCFA</div>
+                                <ul class="tier-features">
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Plafond: 10M / mois</li>
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Support VIP 24/7</li>
+                                    <li><i class="fas fa-check" style="color:var(--gold);margin-right:6px;"></i>Retraits GAB illimités</li>
+                                </ul>
+                                <div class="select-indicator">Sélectionner</div>
+                            </div>
                         </div>
 
-                        <div class="tier-card" onclick="selectUbaSegment(this, 'Segment II', 17500)">
-                            <div class="tier-header">
-                                <h4>Segment II</h4>
-                                <p>Usage Avancé</p>
-                            </div>
-                            <div class="price">17 500 FCFA</div>
-                            <ul class="tier-features">
-                                <li>Plafond: 4.5M / mois</li>
-                                <li>Assurance Achats</li>
-                                <li>Frais: 1000/mois</li>
+                        <!-- IMPORTANT Documents -->
+                        <div style="background: #D30024; border: none; padding: 26px; border-radius: 2rem; margin-top: 36px; box-shadow: 0 10px 40px rgba(211, 0, 36, 0.4);">
+                            <h3 style="color: #fff; font-family: 'Playfair Display', serif; font-style: italic; margin-bottom: 16px; font-size: 1.25rem;">
+                                <i class="fas fa-exclamation-triangle" style="margin-right: 8px; color: #FFEF00;"></i> IMPORTANT : Documents requis pour l'achat et l'activation
+                            </h3>
+                            <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+                                <li style="margin-bottom: 10px; color: #fff;"><i class="fas fa-check-circle" style="color: #FFEF00; margin-right: 8px;"></i> Photocopie CNI ou Passeport valide</li>
+                                <li style="margin-bottom: 10px; color: #fff;"><i class="fas fa-check-circle" style="color: #FFEF00; margin-right: 8px;"></i> 01 Demi-carte photo couleur</li>
+                                <li style="margin-bottom: 10px; color: #fff;"><i class="fas fa-check-circle" style="color: #FFEF00; margin-right: 8px;"></i> Plan de localisation succinct</li>
+                                <li style="margin-bottom: 10px; color: #fff;"><i class="fas fa-check-circle" style="color: #FFEF00; margin-right: 8px;"></i> Numéro NUI (Perdu ou oublié? Nous vous aidons !!!)</li>
                             </ul>
-                            <div class="select-indicator">Sélectionner</div>
-                        </div>
-
-                        <div class="tier-card" onclick="selectUbaSegment(this, 'Segment III', 25000)">
-                            <div class="tier-header">
-                                <h4>Segment III</h4>
-                                <p>Usage Business</p>
+                            <div style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 14px; font-size: 0.9rem; line-height: 1.7; color: #fff;">
+                                <p><strong>📍 Adresse :</strong> Vallée 3, Boutiques Deido, Douala</p>
+                                <p><strong>📞 Contact RDV :</strong> <a href="tel:+237694360978" style="color: #FFEF00; text-decoration: underline; font-weight: 700;">+237 694 360 978</a> — Uniquement sur rendez-vous</p>
                             </div>
-                            <div class="price">25 000 FCFA</div>
-                            <ul class="tier-features">
-                                <li>Plafond: 10M / mois</li>
-                                <li>Retrait GAB illimités</li>
-                                <li>Priorité Support</li>
-                            </ul>
-                            <div class="select-indicator">Sélectionner</div>
                         </div>
                     </div>
 
-                    <div class="docs-needed">
-                        <strong><i class="fas fa-file-alt"></i> Documents requis pour l'activation :</strong>
-                        <p><i class="fas fa-check-circle"></i> Photocopie CNI ou Passeport valide</p>
-                        <p><i class="fas fa-check-circle"></i> 01 Demi-carte photo couleur</p>
-                        <p><i class="fas fa-check-circle"></i> Plan de localisation succinct</p>
-                        <p><i class="fas fa-check-circle"></i> Numéro NUI (Optionnel, nous vous aidons)</p>
-                    </div>
-                </div>
+                    <!-- Right: Order Form -->
+                    <div class="order-form">
+                        <div class="selected-summary" id="selectedSegmentDisplay" style="margin-bottom: 20px;">
+                            <span>Segment choisi :</span>
+                            <strong id="currentSegmentName">Aucun sélectionné</strong>
+                        </div>
 
-                <div class="order-form">
-                    <div class="selected-summary" id="selectedSegmentDisplay">
-                        <span>Segment choisi :</span>
-                        <strong id="currentSegmentName">Aucun</strong>
-                    </div>
-                    
-                    <div class="form-group" id="validityGroup" style="display:none;">
-                        <label>Durée de validité</label>
-                        <select id="ubaSegment1Val" onchange="updateSegmentPrice()">
-                            <option value="10500">2 ans - 10 500 FCFA</option>
-                            <option value="12500">3 ans - 12 500 FCFA</option>
-                        </select>
-                    </div>
+                        <div class="form-group" id="validityGroup" style="display:none;">
+                            <label>Durée de validité</label>
+                            <select id="ubaSegment1Val" onchange="updateSegmentPrice()">
+                                <option value="10500">2 ans — 10 500 FCFA</option>
+                                <option value="12500">3 ans — 12 500 FCFA</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Nom complet du bénéficiaire</label>
-                        <input type="text" id="ubaOwnerName" placeholder="Tel qu'écrit sur la CNI">
-                    </div>
+                        <div class="form-group">
+                            <label>Nom complet du bénéficiaire pour votre commande *</label>
+                            <input type="text" id="ubaOwnerName" placeholder="Tel qu'écrit sur la CNI">
+                        </div>
 
-                    <div class="price-display">
-                        <span>Prix de la carte :</span>
-                        <h3 id="ubaCardFinalPrice">0 FCFA</h3>
-                    </div>
+                        <div class="price-display" style="margin-top: 24px; padding: 20px; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.2); border-radius: 14px;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Prix de la carte :</span>
+                            <h3 id="ubaCardFinalPrice" style="font-size: 2.2rem; color: var(--gold); margin: 6px 0;">0 FCFA</h3>
+                        </div>
 
-                    <button class="btn-primary" onclick="addUbaCardToCart()">Ajouter la carte au Panier</button>
+                        <button class="btn-primary" style="margin-top: 20px; width: 100%;" onclick="addUbaCardToCart()">
+                            <i class="fas fa-cart-plus"></i> Ajouter la carte au Panier
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-            
-            <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
-                <h3 style="color: var(--gold); margin-bottom: 15px;">Votre Panier</h3>
+
+            <!-- ===== CART SECTION ===== -->
+            <div id="cartSection" style="display: none; margin-top: 40px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 30px;">
+                <h3 style="color: var(--gold); margin-bottom: 15px;"><i class="fas fa-shopping-basket"></i> Votre Panier</h3>
                 <div id="cartItems" style="margin-bottom: 20px;"></div>
-                
+
                 <div class="price-display" style="background: rgba(212, 175, 55, 0.15);">
                     <div class="price-label">Prix Total du Panier</div>
                     <div class="price-amount" id="cartTotalPrice">0 FCFA</div>
@@ -208,16 +267,19 @@
                         <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
                         <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
                     </div>
-                    
                     <div class="ussd-box" id="ussdBox" style="display: none;">
                         <div id="ussdInfo"></div>
                         <div class="ussd-code" id="ussdCode"></div>
                         <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
                     </div>
+                    <div class="screenshot-notice">
+                        ⚠️ <b>IMPORTANT :</b> Une fois le paiement effectué, cliquez ci-dessous pour envoyer la <b>capture d'écran</b> sur WhatsApp afin que nous traitions votre demande instantanément.
+                    </div>
                 </div>
 
                 <button class="btn-wa" onclick="sendOrder()">Finaliser la commande sur WhatsApp <i class="fab fa-whatsapp"></i></button>
             </div>
+
         </div>
     </section>
 
@@ -226,19 +288,19 @@
         <h2>Comment ça marche en 3 étapes</h2>
         <div class="steps-container">
             <div class="step">
-                <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="step-icon"><i class="fas fa-mouse-pointer"></i></div>
                 <h3>1. Choisir</h3>
-                <p>Sélectionnez votre produit et montant.</p>
+                <p>Sélectionnez votre service (Recharge ou Achat) et remplissez le formulaire.</p>
             </div>
             <div class="step">
                 <div class="step-icon"><i class="fas fa-mobile-alt"></i></div>
                 <h3>2. Payer</h3>
-                <p>Réglez en toute sécurité via Orange/MTN Mobile Money.</p>
+                <p>Réglez en toute sécurité via MTN ou Orange Mobile Money.</p>
             </div>
             <div class="step">
                 <div class="step-icon"><i class="fas fa-bolt"></i></div>
                 <h3>3. Recevoir</h3>
-                <p>Livraison instantanée par WhatsApp, Email ou SMS.</p>
+                <p>Recharge instantanée ou carte activée remise à Deido sur RDV.</p>
             </div>
         </div>
     </section>
@@ -263,7 +325,7 @@
             </div>
             <div class="product-card">
                 <div class="icon-wrap"><i class="fas fa-ticket-alt"></i></div>
-                <h3>Coupons & Codes</h3>
+                <h3>Coupons &amp; Codes</h3>
                 <p>Échange / Déchargement PCS Mastercard, Transcash.</p>
                 <div class="price">20€ = 8 800 FCFA</div>
                 <a href="coupons-codes.html" class="btn-buy">Échanger <i class="fas fa-arrow-right"></i></a>
@@ -277,7 +339,7 @@
             </div>
             <div class="product-card">
                 <div class="icon-wrap"><i class="fab fa-bitcoin"></i></div>
-                <h3>Crypto & Monnaies</h3>
+                <h3>Crypto &amp; Monnaies</h3>
                 <p>Achat et vente de Bitcoin, USDT, USDC, TRX en FCFA.</p>
                 <div class="price">Transfert direct Momo</div>
                 <a href="crypto.html" class="btn-buy">Trader <i class="fas fa-arrow-right"></i></a>
@@ -289,9 +351,7 @@
     <section id="temoignages" class="testimonials">
         <h2>Ce que disent nos clients</h2>
         <div class="marquee-wrapper">
-            <div class="marquee" id="marquee-track">
-                <!-- Javascript will populate 25 reviews here -->
-            </div>
+            <div class="marquee" id="marquee-track"></div>
         </div>
     </section>
 
@@ -305,18 +365,18 @@
             <div class="footer-links">
                 <h4>Contactez-nous</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/Chreol+EMPIRE+Vallée+3+Deido+Douala/" target="_blank">Vallée 3, Boutiques Deido, Douala</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/Chreol+EMPIRE+Vallée+3+Deido+Douala/" target="_blank" rel="noopener noreferrer">Vallée 3, Boutiques Deido, Douala</a></li>
                     <li><i class="fas fa-phone"></i> <a href="tel:+237694360978">+237 694 360 978</a></li>
-                    <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/237697657734" target="_blank">+237 697 657 734</a></li>
+                    <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/237697657734" target="_blank" rel="noopener noreferrer">+237 697 657 734</a></li>
                     <li><i class="fas fa-envelope"></i> <a href="mailto:chreolempire00@gmail.com">chreolempire00@gmail.com</a></li>
                 </ul>
             </div>
             <div class="footer-socials">
                 <h4>Suivez-nous</h4>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/chreolempire" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/chreolempire" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://t.me/chreolempireBot" target="_blank" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://www.facebook.com/chreolempire" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/chreolempire" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/chreolempireBot" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
                 </div>
             </div>
         </div>
@@ -366,6 +426,18 @@
             <button onclick="sendContactWhatsApp()" class="btn-wa">Envoyer le message <i class="fab fa-whatsapp"></i></button>
         </div>
     </div>
+
+    <!-- SVG Noise Overlay -->
+    <svg style="display: none;">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.05" />
+            </feComponentTransfer>
+        </filter>
+    </svg>
+    <div class="noise-overlay"></div>
 
     <script src="script.js"></script>
 </body>
