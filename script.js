@@ -79,12 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.renderCart();
     };
 
-    // Render cart on page load if the elements exist
-    document.addEventListener('DOMContentLoaded', () => {
-        if (document.getElementById('cartItems')) {
-            window.renderCart();
-        }
-    });
+    // Render cart on page load
+    window.renderCart();
 
     window.initValues = function() {
         const typeEl = document.getElementById('cardType');
@@ -188,13 +184,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const cartItems = document.getElementById('cartItems');
         const cartTotalPriceDisplay = document.getElementById('cartTotalPrice');
         
-        if (window.cart.length === 0) {
-            cartSection.style.display = "none";
+        // Navbar & Floating Cart indicators
+        const navCart = document.getElementById('navCart');
+        const navCartCount = document.getElementById('navCartCount');
+        const cartFloat = document.getElementById('cartFloat');
+        const cartFloatCount = document.getElementById('cartFloatCount');
+
+        const totalItems = window.cart.length;
+
+        if (totalItems > 0) {
+            if (navCart) navCart.style.display = "block";
+            if (navCartCount) navCartCount.innerText = totalItems;
+            if (cartFloat) cartFloat.style.display = "flex";
+            if (cartFloatCount) cartFloatCount.innerText = totalItems;
+        } else {
+            if (navCart) navCart.style.display = "none";
+            if (cartFloat) cartFloat.style.display = "none";
+        }
+
+        if (totalItems === 0) {
+            if(cartSection) cartSection.style.display = "none";
             window.updateUSSD(0);
             return;
         }
 
-        cartSection.style.display = "block";
+        if(cartSection) cartSection.style.display = "block";
         let html = '';
         let grandTotal = 0;
 
@@ -212,9 +226,16 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
 
-        cartItems.innerHTML = html;
-        cartTotalPriceDisplay.innerText = grandTotal.toLocaleString('fr-FR') + " FCFA";
+        if(cartItems) cartItems.innerHTML = html;
+        if(cartTotalPriceDisplay) cartTotalPriceDisplay.innerText = grandTotal.toLocaleString('fr-FR') + " FCFA";
         window.updateUSSD(grandTotal);
+    };
+
+    window.scrollToCart = function() {
+        const cartSection = document.getElementById('cartSection');
+        if (cartSection) {
+            cartSection.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     window.removeFromCart = function(index) {

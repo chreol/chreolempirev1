@@ -41,6 +41,10 @@
                 </div>
             </div>
             <a href="index.html#temoignages">Avis</a>
+            <div class="nav-cart" id="navCart" onclick="scrollToCart()">
+                <i class="fas fa-shopping-basket"></i>
+                <span class="cart-count-badge" id="navCartCount">0</span>
+            </div>
             <a href="#" onclick="openContactModal(event)" class="btn-contact">Contact</a>
         </nav>
     </header>
@@ -173,11 +177,17 @@
         </div>
     </footer>
 
-    <!-- Floating WhatsApp -->
-    <a href="https://wa.me/237697657734" class="wa-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-        <span class="wa-tooltip">Contacter si besoin d'assistance</span>
-    </a>
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+        <a href="#cartSection" class="cart-float" id="cartFloat">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count-badge" id="cartFloatCount">0</span>
+        </a>
+        <a href="https://wa.me/237697657734" class="wa-float" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span class="wa-tooltip">Besoin d'aide ? Contactez-nous</span>
+        </a>
+    </div>
 
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
