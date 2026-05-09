@@ -498,6 +498,33 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('cardType')) {
         window.initValues();
     }
+    // Mobile Menu Toggle
+    const mobileMenu = document.getElementById('mobile-menu');
+    const nav = document.querySelector('nav');
+
+    if (mobileMenu) {
+        mobileMenu.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            const icon = mobileMenu.querySelector('i');
+            if (nav.classList.contains('active')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+    }
+
+    // Mobile Dropdown Toggle
+    const dropbtn = document.querySelector('.dropbtn');
+    const dropdown = document.querySelector('.dropdown');
+    if (dropbtn) {
+        dropbtn.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
+        });
+    }
 });
 
 // Contact Modal Functions
