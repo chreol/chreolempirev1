@@ -251,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let orderDetails = "";
         let grandTotal = 0;
+        const transactionId = "CMD-" + Math.floor(100000 + Math.random() * 900000);
 
         window.cart.forEach((item, index) => {
             grandTotal += item.totalPrice;
@@ -261,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
             orderDetails += `- Prix : ${item.totalPrice.toLocaleString('fr-FR')} FCFA%0A%0A`;
         });
 
-        const msg = `Bonjour 👋%0AJe souhaite valider ma commande :%0A%0A${orderDetails}*Total à valider : ${grandTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode de paiement : ${currentMethod}%0A%0AVoici ma capture d'écran de paiement ci-jointe ⬇️`;
+        const msg = `Bonjour 👋%0AJe souhaite valider ma commande :%0A%0A*ID Transaction : ${transactionId}*%0A%0A${orderDetails}*Total à valider : ${grandTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode de paiement : ${currentMethod}%0A%0AVoici ma capture d'écran de paiement ci-jointe ⬇️`;
         
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
     };
