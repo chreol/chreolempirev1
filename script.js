@@ -79,8 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.renderCart();
     };
 
-    // Render cart on page load
-    window.renderCart();
+
 
     window.initValues = function() {
         const typeEl = document.getElementById('cardType');
@@ -546,6 +545,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Render cart on page load
+    window.renderCart();
 });
 
 // Contact Modal Functions

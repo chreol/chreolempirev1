@@ -816,10 +816,16 @@ footer {
 
     .dropdown:hover .dropdown-content {
         display: none; /* Disable hover on mobile */
+        opacity: 0;
+        visibility: hidden;
     }
 
     .dropdown.active .dropdown-content {
         display: block;
+        opacity: 1;
+        visibility: visible;
+        position: static;
+        transform: none;
     }
 
     .btn-nav-left {
