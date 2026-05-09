@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chreol Empire Cartes Cadeaux - Formulaire de Commande Paiement S�curis�</title>
+    <style>
+        :root {
+            --gold: #C9A84C;
+            --gold-bg: rgba(201, 168, 76, 0.1);
+            --dark-bg: #080808;
+            --card-bg: #111111;
+            --text-main: #f0e8d0;
+            --text-muted: #9a8060;
+            --border: rgba(201, 168, 76, 0.25);
+            --green: #25D366;
+            --mtn: #ffcc00;
+            --orange: #ff6600;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-placeholder {
+            width: 70px;
+            height: 70px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--gold);
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(201,168,76,0); }
+            50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(201,168,76,0.3); }
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin: 0;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid var(--border);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        select:focus, input:focus { border-color: var(--gold); }
+
+        .price-display {
+            background: var(--gold-bg);
+            border: 1px solid var(--gold);
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .price-label { font-size: 10px; text-transform: uppercase; color: var(--gold); }
+        .price-amount { font-size: 28px; font-weight: 800; color: #fff; margin-top: 5px; }
+        .logo-img { width: 130px; height: auto; border-radius: 10px; margin-bottom: 10px; }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pay-card {
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #151515;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .pay-card.active-mtn { background: var(--mtn); color: #000; border-color: var(--mtn); }
+        .pay-card.active-orange { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+        .ussd-box {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ussd-code {
+            display: block;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin: 10px 0;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .btn-wa {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-wa:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        .screenshot-notice {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff9d9d;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        #custom-msg { color: #ffcc00; font-size: 11px; margin-top: 8px; display: none; }
+
+        /* Floating Button */
+        .wa-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--green);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            cursor: pointer;
+            z-index: 100;
+        }
+    </style>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo-placeholder"><img src="img/chreol_Change_logo.webp" class="logo-img"></div>
+        <h2>Chreol Change</h2>
+    </div>
+
+    <!-- Type de carte -->
+    <div class="form-group">
+        <label>Type de Cartes Cadeaux</label>
+        <select id="cardType" onchange="initValues()">
+            <option value="gaming">PlayStation Network (PSN)</option>
+            <option value="gaming">Xbox & Game Pass</option>
+            <option value="gaming">Nintendo eShop</option>
+            <option value="gaming">Steam</option>
+            <option value="gaming">Roblox</option>
+            <option value="robux">ROBUX (Pi�ces)</option>
+            <option value="gaming">Razer Gold</option>
+            <option value="apps">App Store & iTunes</option>
+            <option value="apps">Google Play</option>
+        </select>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+        <div class="form-group" style="flex: 1.5;">
+            <label>Pays / Monnaie</label>
+            <select id="currency">
+                <option value="Global EUR">Global</option>
+                <option value="France EUR">France</option>
+                <option value="Belgique EUR">Belgique</option>
+                <option value="Pologne EUR">Pologne</option>
+                <option value="Spain EUR">Spain</option>
+                <option value="Finlande EUR">Finlande</option>
+                <option value="Slovaquie EUR">Slovaquie</option>
+                <option value="Allemagne EUR">Allemagne</option>
+                <option value="Danemark EUR">Danemark</option>
+                <option value="Autruche EUR">Autruche</option>
+                <option value="R. Tcheque EUR">Republique Tcheque</option>
+                <option value="Suede EUR">Suede</option>
+                <option value="Italie EUR">Italie</option>
+                <option value="Romanie EUR">Romanie</option>
+                <option value="Croatie EUR">Croatie</option>
+                <option value="USA USD">USA</option>
+            </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+            <label>Quantit�</label>
+            <input type="number" id="qty" value="1" min="1" oninput="updatePrice()">
+        </div>
+    </div>
+
+    <!-- Valeur -->
+    <div class="form-group">
+        <label id="valLabel">Valeur de la carte</label>
+        <select id="cardVal" onchange="handleValueSelection()">
+            <!-- JS Inject� -->
+        </select>
+        <input type="number" id="customVal" style="display:none; margin-top:10px;" placeholder="Entrez la valeur souhait�e" oninput="updatePrice()">
+        <div id="custom-msg">?? Prix communiqu� apr�s soumission de commande.</div>
+    </div>
+
+    <!-- Affichage Prix -->
+    <div class="price-display">
+        <div class="price-label">Prix Total Estim�</div>
+        <div class="price-amount" id="totalPrice">7 500 FCFA</div>
+    </div>
+
+    <!-- Paiement -->
+    <label>Mode de Paiement</label>
+    <div class="payment-grid">
+        <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">?? MTN Money</div>
+        <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">?? Orange Money</div>
+    </div>
+
+    <!-- Bo�te USSD -->
+    <div class="ussd-box" id="ussdBox">
+        <div id="ussdInfo"></div>
+        <span class="ussd-code" id="ussdCode"></span>
+        <div style="font-size: 10px; color: var(--gold);">Action : Validez le paiement pour confirmer votre commande.</div>
+    </div>
+
+    <div class="screenshot-notice">
+        ?? <b>IMPORTANT :</b> Une fois effectu�, veuillez envoyer la <b>capture d'�cran</b> (screenshot) pour d�clencher le traitement imm�diat.
+    </div>
+
+    <button class="btn-wa" onclick="sendOrder()">
+        ?? Finaliser sur WhatsApp
+    </button>
+</div>
+
+<div class="wa-float" onclick="sendOrder()">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</div>
+
+<script>
+    let currentMethod = "";
+
+    const tariffs = {
+        gaming: { 10: 7500, 20: 14500, 30: 22000, 50: 35000, 100: 68500 , 150: 102000, 200: 135000, 300: 204000, 500: 340000 },
+        apps: { 5: 4000, 10: 7500, 20: 14500, 25: 18000, 50: 35500, 100: 68500 },
+        robux: { 100: 2500, 200: 3500, 300: 4500, 400: 5500, 800: 10000, 1000: 13000, 2000: 23500 }
+    };
+
+    function initValues() {
+        const type = document.getElementById('cardType').value;
+        const cardVal = document.getElementById('cardVal');
+        const valLabel = document.getElementById('valLabel');
+        let html = "";
+
+        if (type === "robux") {
+            valLabel.innerText = "Quantit� de Robux";
+            Object.keys(tariffs.robux).forEach(v => {
+                html += `<option value="${v}">${v} Robux</option>`;
+            });
+        } else if (type === "apps") {
+            valLabel.innerText = "Valeur de la carte";
+            Object.keys(tariffs.apps).forEach(v => {
+                html += `<option value="${v}">${v} </option>`;
+            });
+        } else {
+            valLabel.innerText = "Valeur de la carte";
+            Object.keys(tariffs.gaming).forEach(v => {
+                html += `<option value="${v}">${v} </option>`;
+            });
+        }
+
+        html += `<option value="custom">Entrer manuellement...</option>`;
+        cardVal.innerHTML = html;
+        handleValueSelection();
+    }
+
+    function handleValueSelection() {
+        const val = document.getElementById('cardVal').value;
+        const customInput = document.getElementById('customVal');
+        const customMsg = document.getElementById('custom-msg');
+
+        if (val === "custom") {
+            customInput.style.display = "block";
+            customMsg.style.display = "block";
+        } else {
+            customInput.style.display = "none";
+            customMsg.style.display = "none";
+        }
+        updatePrice();
+    }
+
+    function updatePrice() {
+        const type = document.getElementById('cardType').value;
+        const valChoice = document.getElementById('cardVal').value;
+        const qty = parseInt(document.getElementById('qty').value) || 1;
+        const display = document.getElementById('totalPrice');
+
+        if (valChoice === "custom") {
+            display.innerText = "� D�FINIR";
+            updateUSSD(0);
+            return;
+        }
+
+        const unitPrice = tariffs[type][valChoice] || 0;
+        const total = unitPrice * qty;
+        display.innerText = total.toLocaleString('fr-FR') + " FCFA";
+        updateUSSD(total);
+    }
+
+    function selectPayment(method) {
+        currentMethod = method;
+        document.getElementById('mtn-btn').className = 'pay-card' + (method === 'MTN' ? ' active-mtn' : '');
+        document.getElementById('om-btn').className = 'pay-card' + (method === 'OM' ? ' active-orange' : '');
+        updatePrice();
+    }
+
+    function updateUSSD(amount) {
+        const box = document.getElementById('ussdBox');
+        const info = document.getElementById('ussdInfo');
+        const code = document.getElementById('ussdCode');
+
+        if (amount === 0 || currentMethod === "") {
+            box.style.display = "none";
+            return;
+        }
+
+        box.style.display = "block";
+
+        if (currentMethod === "MTN") {
+            info.innerHTML = `<span style="color:var(--mtn)">MTN Money (Flotte)</span><br><small>Nom : ETS Contant</small>`;
+            code.innerText = `*126*14*672416141*${amount}#`;
+        } else {
+            info.innerHTML = `<span style="color:var(--orange)">Orange Money (Transfert UV)</span><br><small>Nom : Ets Tagny</small>`;
+            code.innerText = `#150*14*518554*692251299*${amount}#`;
+        }
+    }
+
+    function sendOrder() {
+        const type = document.getElementById('cardType').selectedOptions[0].text;
+        const qty = document.getElementById('qty').value;
+        const cry = document.getElementById('currency').value;
+        const val = document.getElementById('cardVal').value === "custom" ? document.getElementById('customVal').value : document.getElementById('cardVal').value;
+        const price = document.getElementById('totalPrice').innerText;
+        const method = currentMethod || "Non s�lectionn�";
+
+        const text = `Bonjour Chreol Empire????,\nJe souhaite commander :\n\n?? Type : ${type}\n ???pays : ${cry}\n?? Valeur : ${val}\n?? Quantit� : ${qty}\n?? Mode : ${method}\n?? Total : ${price}\n\n? J'envoie la capture d'�cran du paiement pour validation de ma commande.`;
+
+        window.open(`https://wa.me/237697657734?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // Lancement par d�faut
+    initValues();
+</script>
+
+</body>
+</html>
+

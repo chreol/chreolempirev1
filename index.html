@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chreol Empire | Cartes Cadeaux & Services Digitaux</title>
+    <meta name="description"
+        content="Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et autres. Livraison rapide par email, WhatsApp, SMS.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/jpeg" href="img/logo.jpg">
+    <link rel="shortcut icon" href="img/logo.jpg" type="image/x-icon">
+    <link rel="apple-touch-icon" href="img/logo.jpg">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-area" style="display: flex; align-items: center; gap: 20px;">
+            <div class="logo">
+                <img src="img/logo.jpg" alt="Chreol Empire Logo">
+                <span>CHREOL EMPIRE</span>
+            </div>
+            <a href="#commander" class="btn-nav-left">Acheter</a>
+        </div>
+        <nav>
+            <a href="#comment-ca-marche">Comment ça marche</a>
+            <a href="#produits">Nos Offres</a>
+            <a href="#temoignages">Avis</a>
+            <a href="#contact" class="btn-contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Le Premium des Services Digitaux</h1>
+            <p>Cartes cadeaux PSN, iTunes, Roblox, Nintendo, Xbox, Free Fire et bien plus. Livraison express garantie
+                par Email, WhatsApp ou SMS.</p>
+            <a href="https://wa.me/237697657734" target="_blank" class="cta-button">Commander Maintenant <i
+                    class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="hero-image">
+            <div class="card-stack" id="heroCardStack">
+                <img src="img/Psn gift card.jpg" class="card" alt="PSN">
+                <img src="img/Carte Cadeau Itunes.png" class="card" alt="iTunes">
+                <img src="img/Carte Cadeau Roblox.png" class="card" alt="Roblox">
+                <img src="img/Carte Cadeau.png" class="card" alt="Carte Cadeau">
+                <img src="img/Carte cadeau Roblox Robux.png" class="card" alt="Robux">
+                <img src="img/Gift Card.png" class="card" alt="Gift Card">
+                <img src="img/Jouer.jpg" class="card" alt="Jouer">
+                <img src="img/apple-gift-card-front.png" class="card" alt="Apple">
+            </div>
+        </div>
+    </section>
+
+    <!-- Selection Form -->
+    <section class="card-selection" id="commander">
+        <h2>Commander une Carte</h2>
+        <div class="form-container">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="cardType">Catégorie</label>
+                    <select id="cardType" onchange="initValues()">
+                        <option value="gaming">Jeux Vidéo</option>
+                        <option value="apps">Applications</option>
+                        <option value="robux">ROBUX</option>
+                    </select>
+                </div>
+                <div class="form-group" id="exactCardGroup">
+                    <label for="exactCard">Carte Exacte</label>
+                    <select id="exactCard">
+                        <!-- JS Injected -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="currency">Pays / Monnaie</label>
+                    <select id="currency">
+                        <option value="Global EUR">Global</option>
+                        <option value="France EUR">France</option>
+                        <option value="Belgique EUR">Belgique</option>
+                        <option value="Pologne EUR">Pologne</option>
+                        <option value="Spain EUR">Spain</option>
+                        <option value="Finlande EUR">Finlande</option>
+                        <option value="Slovaquie EUR">Slovaquie</option>
+                        <option value="Allemagne EUR">Allemagne</option>
+                        <option value="Danemark EUR">Danemark</option>
+                        <option value="Autruche EUR">Autruche</option>
+                        <option value="R. Tcheque EUR">Republique Tcheque</option>
+                        <option value="Suede EUR">Suede</option>
+                        <option value="Italie EUR">Italie</option>
+                        <option value="Romanie EUR">Romanie</option>
+                        <option value="Croatie EUR">Croatie</option>
+                        <option value="USA USD">USA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="valLabel" for="cardVal">Valeur de la carte</label>
+                    <select id="cardVal" onchange="handleValueSelection()">
+                        <!-- JS Injected -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="qty">Quantité</label>
+                    <input type="number" id="qty" value="1" min="1" oninput="updatePrice()">
+                </div>
+            </div>
+            
+            <div class="price-display">
+                <div class="price-label">Prix Total Estimé</div>
+                <div class="price-amount" id="totalPrice">7 500 FCFA</div>
+            </div>
+
+            <div class="payment-section">
+                <label>Mode de Paiement</label>
+                <div class="payment-grid">
+                    <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
+                    <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
+                </div>
+                
+                <div class="ussd-box" id="ussdBox" style="display: none;">
+                    <div id="ussdInfo"></div>
+                    <div class="ussd-code" id="ussdCode"></div>
+                    <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
+                </div>
+                
+                <div class="screenshot-notice">
+                    ⚠️ <b>IMPORTANT :</b> Une fois le paiement effectué, cliquez ci-dessous pour envoyer la <b>capture d'écran</b> sur WhatsApp et recevoir votre commande instantanément.
+                </div>
+            </div>
+
+            <button class="btn-wa" onclick="sendOrder()">Finaliser sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+        </div>
+    </section>
+
+    <!-- Comment ça marche -->
+    <section id="comment-ca-marche" class="how-it-works">
+        <h2>Comment ça marche en 3 étapes</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3>1. Choisir</h3>
+                <p>Sélectionnez votre produit et montant.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>2. Payer</h3>
+                <p>Réglez en toute sécurité via Orange/MTN Mobile Money.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                <h3>3. Recevoir</h3>
+                <p>Livraison instantanée par WhatsApp, Email ou SMS.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Produits -->
+    <section id="produits" class="products">
+        <h2>Nos Offres Phares</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="icon-wrap"><i class="fas fa-gamepad"></i></div>
+                <h3>Cartes Cadeaux</h3>
+                <p>PSN, iTunes, Roblox, Xbox, Nintendo, Free Fire, Fortnite...</p>
+                <div class="price">Livraison 15-30 min</div>
+                <a href="https://wa.me/237697657734" class="btn-buy">Acheter <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="product-card">
+                <div class="icon-wrap"><i class="fas fa-credit-card"></i></div>
+                <h3>UBA Cameroun</h3>
+                <p>Cartes prépayées Visa UBA. Recharges rapides.</p>
+                <div class="price">À partir de 10 500 FCFA</div>
+                <a href="https://wa.me/237697657734" class="btn-buy">Acheter <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="product-card">
+                <div class="icon-wrap"><i class="fas fa-ticket-alt"></i></div>
+                <h3>Coupons & Codes</h3>
+                <p>Échange / Déchargement PCS Mastercard, Transcash.</p>
+                <div class="price">20€ = 8 800 FCFA</div>
+                <a href="https://wa.me/237697657734" class="btn-buy">Échanger <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="product-card">
+                <div class="icon-wrap"><i class="fab fa-paypal"></i></div>
+                <h3>PayPal Europe</h3>
+                <p>Recharge, Vente ou Achat de solde PayPal Europe.</p>
+                <div class="price">Taux très compétitifs</div>
+                <a href="https://wa.me/237697657734" class="btn-buy">Contacter <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="product-card">
+                <div class="icon-wrap"><i class="fab fa-bitcoin"></i></div>
+                <h3>Crypto & Monnaies</h3>
+                <p>Achat et vente de Bitcoin, USDT, USDC, TRX en FCFA.</p>
+                <div class="price">Transfert direct Momo</div>
+                <a href="https://wa.me/237697657734" class="btn-buy">Trader <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Temoignages -->
+    <section id="temoignages" class="testimonials">
+        <h2>Ce que disent nos clients</h2>
+        <div class="marquee-wrapper">
+            <div class="marquee" id="marquee-track">
+                <!-- Javascript will populate 25 reviews here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3>CHREOL EMPIRE</h3>
+                <p>L'autorité du marché Camerounais en services digitaux.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Contactez-nous</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/Chreol+EMPIRE+Vallée+3+Deido+Douala/" target="_blank">Vallée 3, Boutiques Deido, Douala</a></li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:+237694360978">+237 694 360 978</a></li>
+                    <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/237697657734" target="_blank">+237 697 657 734</a></li>
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:chreolempire00@gmail.com">chreolempire00@gmail.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-socials">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/chreolempire" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/chreolempire" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/chreolempireBot" target="_blank" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CHREOL EMPIRE. Tous droits réservés. 🇨🇲</p>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/237697657734" class="wa-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        <span class="wa-tooltip">Contacter si besoin d'assistance</span>
+    </a>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <span class="prev-modal">&#10094;</span>
+        <span class="next-modal">&#10095;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
