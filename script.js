@@ -66,6 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         robux: ["ROBUX"]
     };
 
+    window.cart = [];
+
     window.initValues = function() {
         const typeEl = document.getElementById('cardType');
         if(!typeEl) return;
@@ -74,8 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const valLabel = document.getElementById('valLabel');
         const exactCard = document.getElementById('exactCard');
         
-        let htmlVal = "";
-        let htmlExact = "";
+        let htmlVal = `<option value="" disabled selected>Sélectionnez une valeur</option>`;
+        let htmlExact = `<option value="" disabled selected>Sélectionnez une carte</option>`;
+
+        if (!type) {
+            exactCard.innerHTML = htmlExact;
+            cardVal.innerHTML = htmlVal;
+            window.updatePrice();
+            return;
+        }
 
         // Populate Exact Cards
         specificCards[type].forEach(c => {
@@ -114,18 +123,98 @@ document.addEventListener('DOMContentLoaded', () => {
         const qty = parseInt(document.getElementById('qty').value) || 1;
         const display = document.getElementById('totalPrice');
 
-        const unitPrice = tariffs[type][valChoice] || 0;
+        let unitPrice = 0;
+        if (type && valChoice && tariffs[type] && tariffs[type][valChoice]) {
+            unitPrice = tariffs[type][valChoice];
+        }
+        
         const total = unitPrice * qty;
         display.innerText = total.toLocaleString('fr-FR') + " FCFA";
+    };
+
+    window.addToCart = function() {
+        const typeEl = document.getElementById('cardType');
+        const category = typeEl.options[typeEl.selectedIndex]?.text;
+        const typeValue = typeEl.value;
+        const exactCard = document.getElementById('exactCard').value;
+        const currency = document.getElementById('currency').value;
+        const valChoice = document.getElementById('cardVal').value;
+        const qty = parseInt(document.getElementById('qty').value) || 1;
+
+        if (!typeValue || !exactCard || !currency || !valChoice) {
+            alert("Veuillez remplir toutes les informations de la carte avant d'ajouter au panier.");
+            return;
+        }
+
+        const unitPrice = tariffs[typeValue][valChoice];
+        const totalPrice = unitPrice * qty;
+
+        const item = {
+            category,
+            exactCard,
+            currency,
+            valChoice,
+            qty,
+            unitPrice,
+            totalPrice
+        };
+
+        window.cart.push(item);
+        window.renderCart();
         
-        window.updateUSSD(total);
+        // Reset form
+        typeEl.value = "";
+        document.getElementById('currency').value = "";
+        document.getElementById('qty').value = "1";
+        window.initValues();
+    };
+
+    window.renderCart = function() {
+        const cartSection = document.getElementById('cartSection');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotalPriceDisplay = document.getElementById('cartTotalPrice');
+        
+        if (window.cart.length === 0) {
+            cartSection.style.display = "none";
+            window.updateUSSD(0);
+            return;
+        }
+
+        cartSection.style.display = "block";
+        let html = '';
+        let grandTotal = 0;
+
+        window.cart.forEach((item, index) => {
+            grandTotal += item.totalPrice;
+            html += `
+                <div class="cart-item">
+                    <div class="cart-item-details">
+                        <div class="cart-item-title">${item.qty}x ${item.exactCard}</div>
+                        <div class="cart-item-desc">${item.valChoice} | ${item.currency}</div>
+                    </div>
+                    <div class="cart-item-price">${item.totalPrice.toLocaleString('fr-FR')} FCFA</div>
+                    <button class="btn-remove-cart" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+        });
+
+        cartItems.innerHTML = html;
+        cartTotalPriceDisplay.innerText = grandTotal.toLocaleString('fr-FR') + " FCFA";
+        window.updateUSSD(grandTotal);
+    };
+
+    window.removeFromCart = function(index) {
+        window.cart.splice(index, 1);
+        window.renderCart();
     };
 
     window.selectPayment = function(method) {
         currentMethod = method;
         document.getElementById('mtn-btn').className = 'pay-card' + (method === 'MTN' ? ' active-mtn' : '');
         document.getElementById('om-btn').className = 'pay-card' + (method === 'OM' ? ' active-om' : '');
-        window.updatePrice();
+        
+        let grandTotal = window.cart.reduce((sum, item) => sum + item.totalPrice, 0);
+        window.updateUSSD(grandTotal);
     };
 
     window.updateUSSD = function(amount) {
@@ -150,19 +239,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.sendOrder = function() {
-        const category = document.getElementById('cardType').options[document.getElementById('cardType').selectedIndex].text;
-        const exactCard = document.getElementById('exactCard').value;
-        const currency = document.getElementById('currency').value;
-        const valChoice = document.getElementById('cardVal').value;
-        const qty = document.getElementById('qty').value;
-        const price = document.getElementById('totalPrice').innerText;
-        
+        if (window.cart.length === 0) {
+            alert("Votre panier est vide.");
+            return;
+        }
+
         if(!currentMethod) {
             alert("Veuillez choisir un mode de paiement (MTN ou Orange Money).");
             return;
         }
 
-        const msg = `Bonjour 👋%0AJe souhaite valider ma commande :%0A- Catégorie : ${category}%0A- *Carte Exacte : ${exactCard}*%0A- Valeur : ${valChoice}%0A- Pays/Devise : ${currency}%0A- Quantité : ${qty}%0A%0A*Total à valider : ${price}*%0AMéthode de paiement : ${currentMethod}%0A%0AVoici ma capture d'écran de paiement ci-jointe ⬇️`;
+        let orderDetails = "";
+        let grandTotal = 0;
+
+        window.cart.forEach((item, index) => {
+            grandTotal += item.totalPrice;
+            orderDetails += `*Article ${index + 1} :*%0A`;
+            orderDetails += `- ${item.qty}x ${item.exactCard} (${item.category})%0A`;
+            orderDetails += `- Valeur : ${item.valChoice}%0A`;
+            orderDetails += `- Pays/Devise : ${item.currency}%0A`;
+            orderDetails += `- Prix : ${item.totalPrice.toLocaleString('fr-FR')} FCFA%0A%0A`;
+        });
+
+        const msg = `Bonjour 👋%0AJe souhaite valider ma commande :%0A%0A${orderDetails}*Total à valider : ${grandTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode de paiement : ${currentMethod}%0A%0AVoici ma capture d'écran de paiement ci-jointe ⬇️`;
         
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
     };
@@ -288,5 +387,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize the form values on load
     if (document.getElementById('cardType')) {
         window.initValues();
+    }
+});
+
+// Contact Modal Functions
+window.openContactModal = function(e) {
+    if(e) e.preventDefault();
+    const contactModal = document.getElementById('contactModal');
+    if(contactModal) {
+        contactModal.style.display = "flex";
+    }
+};
+
+window.closeContactModal = function() {
+    const contactModal = document.getElementById('contactModal');
+    if(contactModal) {
+        contactModal.style.display = "none";
+    }
+};
+
+window.sendContactWhatsApp = function() {
+    const name = document.getElementById('contactName').value;
+    const phone = document.getElementById('contactPhone').value;
+    const email = document.getElementById('contactEmail').value;
+    const message = document.getElementById('contactMessage').value;
+
+    if(!name || !phone || !email || !message) {
+        alert("Veuillez remplir tous les champs du formulaire.");
+        return;
+    }
+
+    const text = `Bonjour, je vous contacte depuis le site web :%0A%0A*Nom :* ${name}%0A*Téléphone :* ${phone}%0A*Email :* ${email}%0A*Message / Besoin :* %0A${message}`;
+    window.open(`https://wa.me/237697657734?text=${text}`, '_blank');
+    window.closeContactModal();
+};
+
+// Close contact modal if clicked outside
+window.addEventListener('click', function(event) {
+    const contactModal = document.getElementById('contactModal');
+    if (event.target === contactModal) {
+        window.closeContactModal();
     }
 });

@@ -868,3 +868,112 @@ footer {
 .prev-modal:hover, .next-modal:hover {
     background-color: rgba(212, 175, 55, 0.8);
 }
+
+/* Cart Styles */
+.cart-item {
+    background-color: var(--black);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-title {
+    font-weight: bold;
+    color: var(--gold);
+    margin-bottom: 5px;
+}
+
+.cart-item-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.cart-item-price {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0 15px;
+}
+
+.btn-remove-cart {
+    background-color: transparent;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-remove-cart:hover {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+/* Contact Modal Specifics */
+.modal-form-content {
+    background-color: var(--black-light);
+    margin: 5% auto;
+    padding: 40px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    animation: zoom 0.4s ease-out;
+}
+
+.modal-form-content h2 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+.modal-form-content p {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.close-contact-modal {
+    color: var(--text-muted);
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-contact-modal:hover {
+    color: var(--gold);
+}
+
+.contact-form-group {
+    margin-bottom: 20px;
+}
+
+.contact-form-group input, .contact-form-group textarea {
+    width: 100%;
+    padding: 15px;
+    background: var(--black);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: var(--text);
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+    font-family: 'Inter', sans-serif;
+}
+
+.contact-form-group input:focus, .contact-form-group textarea:focus {
+    border-color: var(--gold);
+}

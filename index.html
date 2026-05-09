@@ -23,13 +23,13 @@
                 <img src="img/logo.jpg" alt="Chreol Empire Logo">
                 <span>CHREOL EMPIRE</span>
             </div>
-            <a href="#commander" class="btn-nav-left">Acheter</a>
+            <a href="#" onclick="openContactModal(event)" class="btn-nav-left">Acheter</a>
         </div>
         <nav>
             <a href="#comment-ca-marche">Comment ça marche</a>
             <a href="#produits">Nos Offres</a>
             <a href="#temoignages">Avis</a>
-            <a href="#contact" class="btn-contact">Contact</a>
+            <a href="#" onclick="openContactModal(event)" class="btn-contact">Contact</a>
         </nav>
     </header>
 
@@ -64,6 +64,7 @@
                 <div class="form-group">
                     <label for="cardType">Catégorie</label>
                     <select id="cardType" onchange="initValues()">
+                        <option value="" disabled selected>Sélectionnez une catégorie</option>
                         <option value="gaming">Jeux Vidéo</option>
                         <option value="apps">Applications</option>
                         <option value="robux">ROBUX</option>
@@ -77,22 +78,22 @@
                 </div>
                 <div class="form-group">
                     <label for="currency">Pays / Monnaie</label>
-                    <select id="currency">
+                    <select id="currency" required>
+                        <option value="" disabled selected>Sélectionnez un pays / monnaie</option>
                         <option value="Global EUR">Global</option>
                         <option value="France EUR">France</option>
-                        <option value="Belgique EUR">Belgique</option>
-                        <option value="Pologne EUR">Pologne</option>
+                        <option value="Belgium EUR">Belgique</option>
+                        <option value="Poland EUR">Pologne</option>
                         <option value="Spain EUR">Spain</option>
-                        <option value="Finlande EUR">Finlande</option>
-                        <option value="Slovaquie EUR">Slovaquie</option>
-                        <option value="Allemagne EUR">Allemagne</option>
-                        <option value="Danemark EUR">Danemark</option>
-                        <option value="Autruche EUR">Autruche</option>
-                        <option value="R. Tcheque EUR">Republique Tcheque</option>
-                        <option value="Suede EUR">Suede</option>
-                        <option value="Italie EUR">Italie</option>
-                        <option value="Romanie EUR">Romanie</option>
-                        <option value="Croatie EUR">Croatie</option>
+                        <option value="Finland EUR">Finlande</option>
+                        <option value="Slovakia EUR">Slovaquie</option>
+                        <option value="Germany EUR">Allemagne</option>
+                        <option value="Denmark EUR">Danemark</option>
+                        <option value="Czech Republic EUR">Republique Tcheque</option>
+                        <option value="Sweden EUR">Suede</option>
+                        <option value="Italy EUR">Italie</option>
+                        <option value="Romania EUR">Romanie</option>
+                        <option value="Croatia EUR">Croatie</option>
                         <option value="USA USD">USA</option>
                     </select>
                 </div>
@@ -113,25 +114,37 @@
                 <div class="price-amount" id="totalPrice">7 500 FCFA</div>
             </div>
 
-            <div class="payment-section">
-                <label>Mode de Paiement</label>
-                <div class="payment-grid">
-                    <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
-                    <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
-                </div>
+            <button class="btn-wa" onclick="addToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-bottom: 20px;">Ajouter au panier <i class="fas fa-cart-plus"></i></button>
+            
+            <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
+                <h3 style="color: var(--gold); margin-bottom: 15px;">Votre Panier</h3>
+                <div id="cartItems" style="margin-bottom: 20px;"></div>
                 
-                <div class="ussd-box" id="ussdBox" style="display: none;">
-                    <div id="ussdInfo"></div>
-                    <div class="ussd-code" id="ussdCode"></div>
-                    <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
+                <div class="price-display" style="background: rgba(212, 175, 55, 0.15);">
+                    <div class="price-label">Prix Total du Panier</div>
+                    <div class="price-amount" id="cartTotalPrice">0 FCFA</div>
                 </div>
-                
-                <div class="screenshot-notice">
-                    ⚠️ <b>IMPORTANT :</b> Une fois le paiement effectué, cliquez ci-dessous pour envoyer la <b>capture d'écran</b> sur WhatsApp et recevoir votre commande instantanément.
-                </div>
-            </div>
 
-            <button class="btn-wa" onclick="sendOrder()">Finaliser sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+                <div class="payment-section">
+                    <label>Mode de Paiement</label>
+                    <div class="payment-grid">
+                        <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
+                        <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
+                    </div>
+                    
+                    <div class="ussd-box" id="ussdBox" style="display: none;">
+                        <div id="ussdInfo"></div>
+                        <div class="ussd-code" id="ussdCode"></div>
+                        <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
+                    </div>
+                    
+                    <div class="screenshot-notice">
+                        ⚠️ <b>IMPORTANT :</b> Une fois le paiement effectué, cliquez ci-dessous pour envoyer la <b>capture d'écran</b> sur WhatsApp et recevoir votre commande instantanément.
+                    </div>
+                </div>
+
+                <button class="btn-wa" onclick="sendOrder()">Finaliser la commande sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+            </div>
         </div>
     </section>
 
@@ -251,6 +264,28 @@
         <span class="prev-modal">&#10094;</span>
         <span class="next-modal">&#10095;</span>
         <img class="modal-content" id="modalImg">
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-form-content">
+            <span class="close-contact-modal" onclick="closeContactModal()">&times;</span>
+            <h2>Nous envoyer un message</h2>
+            <p>Besoin de passer commande ou autres choses ? Remplissez le formulaire ci-dessous.</p>
+            <div class="contact-form-group">
+                <input type="text" id="contactName" placeholder="Nom complet" required>
+            </div>
+            <div class="contact-form-group">
+                <input type="tel" id="contactPhone" placeholder="Téléphone" required>
+            </div>
+            <div class="contact-form-group">
+                <input type="email" id="contactEmail" placeholder="Email" required>
+            </div>
+            <div class="contact-form-group">
+                <textarea id="contactMessage" placeholder="Message ou description du besoin" rows="4" required></textarea>
+            </div>
+            <button onclick="sendContactWhatsApp()" class="btn-wa">Envoyer le message <i class="fab fa-whatsapp"></i></button>
+        </div>
     </div>
 
     <script src="script.js"></script>
