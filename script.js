@@ -491,11 +491,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const paypalRates = { vente: 500, achat: 700 };
 
-    const cryptoRates = {
-        'USDT (TRC20)': { achat: 650, vente: 620, symbol: 'USDT', dec: 2 },
-        'Bitcoin (BTC)': { achat: 65000000, vente: 64000000, symbol: 'BTC', dec: 6 },
-        'Tron (TRX)':    { achat: 85,       vente: 80,       symbol: 'TRX', dec: 0 },
-        'USDC':          { achat: 640,       vente: 610,      symbol: 'USDC', dec: 2 }
+    // achat = nous achetons au client (il vend), vente = nous vendons au client (il achète)
+    const cryptoRates = { achat: 580, vente: 700 };
+
+    const walletAddresses = {
+        'USDT': {
+            'TRC20 (Tron)':  { addr: 'TMiSeBpQQ7AeKzN34wvzC5uybXHFvcyfo6',                                  note: 'Réseau : Tron (TRC20)' },
+            'BEP20 (BSC)':   { addr: '0x7e0fE380958c8B6Eda7Df0d80b0829263256fE85',                           note: 'Réseau : BNB Smart Chain (BEP20)' },
+            'Arbitrum (ARB)':{ addr: '0x7e0fE380958c8B6Eda7Df0d80b0829263256fE85',                           note: 'Réseau : Arbitrum' },
+            'SPL (Solana)':  { addr: 'Egme6fgZ1rQHcNfpDaNNsGh3LBe2aoou4FtuS8MCd71d',                        note: 'Réseau : Solana (SPL)' },
+            'Aptos':         { addr: '0xb30a843b80c8B6Eda7Df0d80b0829263256fE85c8b370be02c977ae30eac1', note: 'Réseau : Aptos' },
+            'Celo':          { addr: '0x640a90a213560756ea03a1cae5741b0b47495caa',              note: 'Réseau : Celo' },
+            'Polkadot (DOT)':{ addr: '14ipdSddWWmkN4pJdk56WFM6BT1Y1zmfiXvDVyxGqPnsKHXk', note: 'Réseau : Polkadot (DOT)' }
+        },
+        'Bitcoin (BTC)': {
+            'Bitcoin (BTC)': { addr: 'bc1q7qzvsrlyn96x6mwfs48hzqrcxfpsqusacj356k', note: 'Réseau : Bitcoin mainnet' }
+        },
+        'Tron (TRX)': {
+            'TRC20 (Tron)': { addr: 'TMiSeBpQQ7AeKzN34wvzC5uybXHFvcyfo6', note: 'Réseau : Tron (TRX)' }
+        },
+        'USDC': {
+            'BEP20 (BSC)':  { addr: '0x7e0fE380958c8B6Eda7Df0d80b0829263256fE85',     note: 'Réseau : BNB Smart Chain (BEP20)' },
+            'SPL (Solana)': { addr: 'Egme6fgZ1rQHcNfpDaNNsGh3LBe2aoou4FtuS8MCd71d', note: 'Réseau : Solana (SPL)' }
+        },
+        'Ethereum (ETH)': {
+            'ERC20 (Ethereum)': { addr: '0x7e0fE380958c8B6Eda7Df0d80b0829263256fE85', note: 'Réseau : Ethereum (ERC20)' }
+        },
+        'Litecoin (LTC)': {
+            'Litecoin (LTC)': { addr: 'ltc1q2tlsexsslwwswkh6yk2nsuy4eu8ancwn9x9lgh', note: 'Réseau : Litecoin' }
+        },
+        'Solana': {
+            'Solana (SOL)': { addr: 'Egme6fgZ1rQHcNfpDaNNsGh3LBe2aoou4FtuS8MCd71d', note: 'Réseau : Solana' }
+        },
+        'Cardano (ADA)': {
+            'Cardano (ADA)': { addr: 'addr1q9mxu5zlhu3mlymfk84zxujj9arrn38gcx67nxnfm5dv43kdr5xh7gfcp3ehfjm9zjs4gwjjm9n5ln3cg0fn0v4gwm0s7uch3z', note: 'Réseau : Cardano' }
+        },
+        'Binance USD (BUSD)': {
+            'BEP20 (BSC)': { addr: '0x7e0fE380958c8B6Eda7Df0d80b0829263256fE85', note: 'Réseau : BNB Smart Chain (BEP20)' }
+        }
     };
 
     window.calculatePaypal = function() {
@@ -597,112 +630,171 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
     };
 
+    // type: 'achat' = nous achetons (client vend crypto, reçoit FCFA @580)
+    //        'vente' = nous vendons (client achète crypto, paie FCFA @700)
     window.setCryptoOp = function(type) {
         document.getElementById('cryptoType').value = type;
-        document.getElementById('tabAchat').classList.toggle('active', type === 'Achat');
-        document.getElementById('tabVente').classList.toggle('active', type === 'Vente');
-        const isAchat = type === 'Achat';
-        const walletGroup = document.getElementById('cryptoWalletGroup');
-        const momoGroup = document.getElementById('cryptoMomoGroup');
-        const sendInfo = document.getElementById('cryptoSendInfo');
-        if (walletGroup) walletGroup.style.display = isAchat ? 'block' : 'none';
-        if (momoGroup) momoGroup.style.display = isAchat ? 'none' : 'grid';
-        if (sendInfo) sendInfo.style.display = isAchat ? 'none' : 'block';
-        const amountEl = document.getElementById('cryptoAmount');
-        if (amountEl) amountEl.value = '';
-        window.calculateCrypto();
+        document.getElementById('tabAchat').classList.toggle('active', type === 'achat');
+        document.getElementById('tabVente').classList.toggle('active', type === 'vente');
+        const isAchat = type === 'achat';
+        const rate = isAchat ? cryptoRates.achat : cryptoRates.vente;
+
+        const opTitle   = document.getElementById('cryptoOpTitle');
+        const rateBadge = document.getElementById('cryptoCurrentRate');
+        if (opTitle)   opTitle.innerText   = isAchat ? '💰 Nous Rachetons vos Dollars / Crypto' : '💳 Achetez vos Cryptos au Meilleur Taux';
+        if (rateBadge) rateBadge.innerText = `1$ = ${rate} FCFA`;
+        if (rateBadge) {
+            rateBadge.style.background   = isAchat ? 'rgba(37,211,102,0.12)' : 'rgba(212,175,55,0.1)';
+            rateBadge.style.borderColor  = isAchat ? 'rgba(37,211,102,0.35)' : 'rgba(212,175,55,0.3)';
+            rateBadge.style.color        = isAchat ? '#25D366' : 'var(--gold)';
+        }
+
+        const depositGroup = document.getElementById('cryptoDepositGroup');
+        const walletGroup  = document.getElementById('cryptoWalletGroup');
+        const momoGroup    = document.getElementById('cryptoMomoGroup');
+        if (depositGroup) depositGroup.style.display = isAchat ? 'block' : 'none';
+        if (walletGroup)  walletGroup.style.display  = isAchat ? 'none'  : 'block';
+        if (momoGroup)    momoGroup.style.display    = isAchat ? 'grid'  : 'none';
+
+        ['cryptoAmountUSD', 'cryptoAmountFCFA'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        const rateEl = document.getElementById('cryptoRateInfo');
+        if (rateEl) rateEl.innerText = '';
+
+        if (isAchat) window.updateCoinNetworks();
     };
 
-    window.calculateCrypto = function() {
-        const coin = document.getElementById('cryptoCoin')?.value || 'USDT (TRC20)';
-        const type = document.getElementById('cryptoType')?.value || 'Achat';
-        const amountEl = document.getElementById('cryptoAmount');
-        const labelEl = document.getElementById('cryptoAmountLabel');
-        const convEl = document.getElementById('cryptoConvertedAmount');
-        const rateEl = document.getElementById('cryptoRateInfo');
-        const convLabelEl = document.getElementById('cryptoConvLabel');
-        if (!convEl) return;
-        const rates = cryptoRates[coin];
-        if (!rates) return;
-        const isAchat = type === 'Achat';
-        const amount = parseFloat(amountEl?.value || 0) || 0;
-        if (labelEl) labelEl.innerText = isAchat ? 'Montant à payer (FCFA)' : `Quantité à vendre (${rates.symbol})`;
-        if (convLabelEl) convLabelEl.innerText = isAchat ? `💱 Vous recevrez (${rates.symbol})` : '💰 Vous recevrez (FCFA)';
-        if (isAchat) {
-            const cryptoAmt = amount > 0 ? (amount / rates.achat).toFixed(rates.dec) : 0;
-            convEl.innerText = cryptoAmt > 0 ? `${cryptoAmt} ${rates.symbol}` : `0 ${rates.symbol}`;
-            if (rateEl) rateEl.innerText = amount > 0 ? `${amount.toLocaleString('fr-FR')} FCFA ÷ ${rates.achat} = ${cryptoAmt} ${rates.symbol}` : '';
+    window.updateCoinNetworks = function() {
+        const coin    = document.getElementById('cryptoCoin')?.value;
+        const netSel  = document.getElementById('cryptoCoinNetwork');
+        const wDisplay = document.getElementById('cryptoWalletDisplay');
+        if (!netSel) return;
+
+        const nets = walletAddresses[coin] || {};
+        netSel.innerHTML = '<option value="">— Sélectionnez le réseau —</option>';
+        Object.keys(nets).forEach(n => {
+            const opt = document.createElement('option');
+            opt.value = n; opt.textContent = n;
+            netSel.appendChild(opt);
+        });
+
+        if (Object.keys(nets).length === 1) {
+            netSel.value = Object.keys(nets)[0];
+            window.updateWalletAddress();
         } else {
-            const fcfa = amount > 0 ? Math.floor(amount * rates.vente) : 0;
-            convEl.innerText = fcfa > 0 ? fcfa.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
-            if (rateEl) rateEl.innerText = amount > 0 ? `${amount} ${rates.symbol} × ${rates.vente} FCFA = ${fcfa.toLocaleString('fr-FR')} FCFA` : '';
+            if (wDisplay) wDisplay.style.display = 'none';
+        }
+    };
+
+    window.updateWalletAddress = function() {
+        const coin    = document.getElementById('cryptoCoin')?.value;
+        const network = document.getElementById('cryptoCoinNetwork')?.value;
+        const wDisplay = document.getElementById('cryptoWalletDisplay');
+        const addrEl  = document.getElementById('cryptoDepositAddr');
+        const noteEl  = document.getElementById('cryptoDepositNetwork');
+        if (!network || !walletAddresses[coin]?.[network]) {
+            if (wDisplay) wDisplay.style.display = 'none';
+            return;
+        }
+        const info = walletAddresses[coin][network];
+        if (addrEl)  addrEl.innerText  = info.addr;
+        if (noteEl)  noteEl.innerText  = info.note;
+        if (wDisplay) wDisplay.style.display = 'block';
+        const btn = document.getElementById('copyAddrBtn');
+        if (btn) btn.innerText = 'Copier';
+    };
+
+    window.copyWalletAddr = function() {
+        const addr = document.getElementById('cryptoDepositAddr')?.innerText;
+        const btn  = document.getElementById('copyAddrBtn');
+        if (!addr || !btn) return;
+        navigator.clipboard?.writeText(addr)
+            .then(() => { btn.innerText = '✓ Copié !'; setTimeout(() => btn.innerText = 'Copier', 2500); })
+            .catch(() => { btn.innerText = '✓ Copié !'; });
+    };
+
+    window.calculateCrypto = function(fromField) {
+        const type = document.getElementById('cryptoType')?.value || 'achat';
+        const rate = type === 'achat' ? cryptoRates.achat : cryptoRates.vente;
+        const usdEl  = document.getElementById('cryptoAmountUSD');
+        const fcfaEl = document.getElementById('cryptoAmountFCFA');
+        const rateEl = document.getElementById('cryptoRateInfo');
+        if (!usdEl || !fcfaEl) return;
+
+        if (fromField === 'usd') {
+            const usd  = parseFloat(usdEl.value) || 0;
+            const fcfa = usd > 0 ? Math.floor(usd * rate) : '';
+            fcfaEl.value = fcfa !== '' ? fcfa : '';
+            if (rateEl) rateEl.innerText = usd > 0 ? `${usd}$ × ${rate} FCFA/$ = ${Number(fcfa).toLocaleString('fr-FR')} FCFA` : '';
+        } else {
+            const fcfa = parseFloat(fcfaEl.value) || 0;
+            const usd  = fcfa > 0 ? (fcfa / rate).toFixed(2) : '';
+            usdEl.value = usd !== '' ? usd : '';
+            if (rateEl) rateEl.innerText = fcfa > 0 ? `${fcfa.toLocaleString('fr-FR')} FCFA ÷ ${rate} = ${usd}$` : '';
         }
     };
 
     window.addCryptoToCart = function() {
-        const coin = document.getElementById('cryptoCoin')?.value;
-        const type = document.getElementById('cryptoType')?.value || 'Achat';
-        const amount = document.getElementById('cryptoAmount')?.value?.trim();
-        const name = document.getElementById('cryptoName')?.value?.trim();
-        const wallet = document.getElementById('cryptoWallet')?.value?.trim();
-        const network = document.getElementById('cryptoNetwork')?.value;
-        const phone = document.getElementById('cryptoPhone')?.value?.trim();
-        const isAchat = type === 'Achat';
+        const coin       = document.getElementById('cryptoCoin')?.value;
+        const type       = document.getElementById('cryptoType')?.value || 'achat';
+        const isAchat    = type === 'achat';
+        const usd        = document.getElementById('cryptoAmountUSD')?.value?.trim();
+        const fcfaVal    = document.getElementById('cryptoAmountFCFA')?.value?.trim();
+        const name       = document.getElementById('cryptoName')?.value?.trim();
+        const wallet     = document.getElementById('cryptoWallet')?.value?.trim();
+        const momoNet    = document.getElementById('cryptoNetwork')?.value;
+        const phone      = document.getElementById('cryptoPhone')?.value?.trim();
+        const coinNet    = document.getElementById('cryptoCoinNetwork')?.value; // réseau crypto (TRC20, BTC…)
 
-        if (!amount || !name) { alert("Veuillez renseigner le montant et votre nom complet."); return; }
-        if (isAchat && !wallet) { alert("Veuillez renseigner votre adresse de wallet pour recevoir vos cryptos."); return; }
-        if (!isAchat && !phone) { alert("Veuillez renseigner votre numéro Mobile Money pour recevoir vos FCFA."); return; }
+        if (!usd || !fcfaVal) { alert("Veuillez renseigner le montant ($ ou FCFA)."); return; }
+        if (!name)            { alert("Veuillez renseigner votre nom complet."); return; }
+        if (isAchat && !coinNet) { alert("Veuillez sélectionner le réseau de votre crypto."); return; }
+        if (!isAchat && !wallet) { alert("Veuillez renseigner votre adresse de wallet pour recevoir vos cryptos."); return; }
+        if (isAchat && !phone)   { alert("Veuillez renseigner votre numéro Mobile Money pour recevoir vos FCFA."); return; }
 
-        const rates = cryptoRates[coin];
-        if (!rates) return;
-
-        let fcfa, cryptoAmt, totalPrice, displayPrice;
-        if (isAchat) {
-            fcfa = parseFloat(amount);
-            cryptoAmt = (fcfa / rates.achat).toFixed(rates.dec);
-            totalPrice = fcfa; displayPrice = fcfa;
-        } else {
-            cryptoAmt = amount;
-            fcfa = Math.floor(parseFloat(amount) * rates.vente);
-            totalPrice = 0; displayPrice = fcfa;
-        }
-
-        const serviceFull = isAchat ? `Achat ${rates.symbol}` : `Vente ${rates.symbol}`;
+        const usdF    = parseFloat(usd);
+        const fcfa    = Math.floor(usdF * (isAchat ? cryptoRates.achat : cryptoRates.vente));
+        const opLabel = isAchat ? 'Rachat' : 'Vente';
+        const depositAddr = walletAddresses[coin]?.[coinNet]?.addr || '';
         const desc = isAchat
-            ? `${fcfa.toLocaleString('fr-FR')} FCFA → ${cryptoAmt} ${rates.symbol} | Wallet: ${wallet} (${name})`
-            : `${cryptoAmt} ${rates.symbol} → ${fcfa.toLocaleString('fr-FR')} FCFA | ${network}: ${phone} (${name})`;
+            ? `${usdF}$ → ${fcfa.toLocaleString('fr-FR')} FCFA | Réseau: ${coinNet}${depositAddr ? ' | Adresse: ' + depositAddr : ''} | MoMo: ${momoNet} ${phone} (${name})`
+            : `${usdF}$ (${fcfa.toLocaleString('fr-FR')} FCFA) → Wallet: ${wallet} (${name})`;
 
         const item = {
-            title: `Crypto: ${serviceFull} — ${isAchat ? fcfa.toLocaleString('fr-FR') + ' FCFA' : cryptoAmt + ' ' + rates.symbol}`,
+            title: `Crypto ${opLabel} — ${usdF}$ en ${coin}`,
             desc,
-            totalPrice,
-            _displayPrice: displayPrice,
-            _operation: type.toLowerCase(),
+            totalPrice: isAchat ? 0 : fcfa,   // vente: client paie FCFA via MoMo
+            _displayPrice: fcfa,
+            _operation: type,
             qty: 1
         };
 
         window.addGenericToCart(item);
-        ['cryptoAmount', 'cryptoName', 'cryptoWallet', 'cryptoPhone'].forEach(id => {
+        ['cryptoAmountUSD', 'cryptoAmountFCFA', 'cryptoName', 'cryptoWallet', 'cryptoPhone'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
-        window.calculateCrypto();
+        const rateEl = document.getElementById('cryptoRateInfo');
+        if (rateEl) rateEl.innerText = '';
     };
 
     window.sendCryptoOrder = function() {
         if (window.cart.length === 0) { alert("Votre panier est vide."); return; }
-        const achatTotal = window.cart.filter(i => i._operation === 'achat').reduce((s, i) => s + i.totalPrice, 0);
-        if (achatTotal > 0 && !currentMethod) {
+        // Vente = nous vendons = client paie FCFA via MoMo
+        const venteTotal = window.cart.filter(i => i._operation === 'vente').reduce((s, i) => s + i.totalPrice, 0);
+        if (venteTotal > 0 && !currentMethod) {
             alert("Veuillez choisir un mode de paiement (MTN ou Orange Money) pour vos achats de cryptos.");
             return;
         }
         let orderDetails = "";
         const transactionId = "CMD-" + Math.floor(100000 + Math.random() * 900000);
         window.cart.forEach((item, index) => {
-            const opLabel = item._operation === 'achat' ? '📥 Achat' : '📤 Vente';
+            const opLabel = item._operation === 'achat' ? '💰 Rachat' : '💳 Vente';
             orderDetails += `*${opLabel} ${index + 1} :*%0A- ${item.title}%0A- ${item.desc}%0A%0A`;
         });
-        const payLine = achatTotal > 0 ? `*Total à payer : ${achatTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode : ${currentMethod}%0A%0A` : '';
+        const payLine = venteTotal > 0 ? `*Total à payer : ${venteTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode : ${currentMethod}%0A%0A` : '';
         const msg = `Bonjour 👋%0ADemande d'échange Crypto :%0A%0A*ID Transaction : ${transactionId}*%0A%0A${orderDetails}${payLine}Capture d'écran de paiement ci-jointe ⬇️`;
         window.cart = []; window.saveCart(); window.renderCart();
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
@@ -1015,6 +1107,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 dropdown.classList.toggle('active');
             }
         });
+    }
+
+    // Initialize crypto deposit group on page load (achat is default tab)
+    if (document.getElementById('cryptoCoinNetwork')) {
+        window.updateCoinNetworks();
     }
 
     // Render cart on page load
