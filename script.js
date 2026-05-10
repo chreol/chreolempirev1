@@ -126,12 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === "apps") {
             valLabel.innerText = "Valeur de la carte (en devise)";
             Object.keys(tariffs.apps).forEach(v => {
-                htmlVal += `<option value="${v}">${v} €/$</option>`;
+                htmlVal += `<option value="${v}">${v} </option>`;
             });
         } else {
             valLabel.innerText = "Valeur de la carte (en devise)";
             Object.keys(tariffs.gaming).forEach(v => {
-                htmlVal += `<option value="${v}">${v} €/$</option>`;
+                htmlVal += `<option value="${v}">${v} </option>`;
             });
         }
 
@@ -553,7 +553,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- COUPON EXCHANGE (coupons-codes.html) ---
-    const couponRates = { PCS: 440, Transcash: 430 };
+    function computeCouponNet(type, value) {
+        if (type === 'PCS') {
+            // PCS : commission 7% prélevée sur la valeur euro, puis × 440 FCFA/€
+            return Math.floor(value * 0.93 * 440);
+        }
+        // Transcash : montant × 440 FCFA/€ directement
+        return Math.floor(value * 440);
+    }
 
     window.calculateCouponNet = function() {
         const typeEl = document.getElementById('couponType');
@@ -564,14 +571,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const type = typeEl ? typeEl.value : 'PCS';
         const value = parseFloat(valueEl ? valueEl.value : 0) || 0;
-        const rate = couponRates[type] || 440;
-        const net = Math.floor(value * rate);
+        const net = computeCouponNet(type, value);
 
         netEl.innerText = net > 0 ? net.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
         if (rateEl) {
-            rateEl.innerText = value > 0
-                ? `Calcul : ${value} € × ${rate} FCFA/€ = ${net.toLocaleString('fr-FR')} FCFA`
-                : '';
+            if (value > 0 && type === 'PCS') {
+                const netEur = (value * 0.93).toFixed(2);
+                rateEl.innerText = `${value}€ − 7% = ${netEur}€ × 440 FCFA/€ = ${net.toLocaleString('fr-FR')} FCFA`;
+            } else if (value > 0) {
+                rateEl.innerText = `${value}€ × 440 FCFA/€ = ${net.toLocaleString('fr-FR')} FCFA`;
+            } else {
+                rateEl.innerText = '';
+            }
         }
     };
 
@@ -588,8 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const rate = couponRates[type] || 440;
-        const net = Math.floor(parseFloat(value) * rate);
+        const net = computeCouponNet(type, parseFloat(value));
         const typeFull = type === 'PCS' ? 'PCS Mastercard' : 'Transcash';
         const codesEncoded = codes.split('\n').map(l => encodeURIComponent(l.trim())).filter(Boolean).join('%0A');
 
