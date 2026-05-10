@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="cart-item-title">${escapeHtml(item.title)}</div>
                         <div class="cart-item-desc">${escapeHtml(item.desc)}</div>
                     </div>
-                    <div class="cart-item-price">${item.totalPrice.toLocaleString('fr-FR')} FCFA</div>
+                    <div class="cart-item-price">${(item._displayPrice !== undefined ? item._displayPrice : item.totalPrice).toLocaleString('fr-FR')} FCFA</div>
                     <button class="btn-remove-cart" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
                 </div>
             `;
@@ -491,6 +491,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const paypalRates = { vente: 500, achat: 700 };
 
+    const cryptoRates = {
+        'USDT (TRC20)': { achat: 650, vente: 620, symbol: 'USDT', dec: 2 },
+        'Bitcoin (BTC)': { achat: 65000000, vente: 64000000, symbol: 'BTC', dec: 6 },
+        'Tron (TRX)':    { achat: 85,       vente: 80,       symbol: 'TRX', dec: 0 },
+        'USDC':          { achat: 640,       vente: 610,      symbol: 'USDC', dec: 2 }
+    };
+
     window.calculatePaypal = function() {
         const serviceEl = document.getElementById('paypalService');
         const amountEl = document.getElementById('paypalAmount');
@@ -558,6 +565,8 @@ document.addEventListener('DOMContentLoaded', () => {
             title: `PayPal: ${serviceFull} — ${amount}€`,
             desc,
             totalPrice: isVente ? 0 : fcfa,
+            _displayPrice: fcfa,
+            _operation: service,
             qty: 1
         };
 
@@ -569,25 +578,134 @@ document.addEventListener('DOMContentLoaded', () => {
         window.calculatePaypal();
     };
 
-    window.addCryptoToCart = function() {
-        const coin = document.getElementById('cryptoCoin').value;
-        const type = document.getElementById('cryptoType').value;
-        const amount = document.getElementById('cryptoAmount').value;
-
-        if (!amount) {
-            alert("Veuillez entrer le montant.");
+    window.sendPayPalOrder = function() {
+        if (window.cart.length === 0) { alert("Votre panier est vide."); return; }
+        const achatTotal = window.cart.filter(i => i._operation === 'achat').reduce((s, i) => s + i.totalPrice, 0);
+        if (achatTotal > 0 && !currentMethod) {
+            alert("Veuillez choisir un mode de paiement (MTN ou Orange Money) pour vos opérations Recharge.");
             return;
         }
+        let orderDetails = "";
+        const transactionId = "CMD-" + Math.floor(100000 + Math.random() * 900000);
+        window.cart.forEach((item, index) => {
+            const opLabel = item._operation === 'vente' ? '📤 Retrait' : '📥 Recharge';
+            orderDetails += `*${opLabel} ${index + 1} :*%0A- ${item.title}%0A- ${item.desc}%0A%0A`;
+        });
+        const payLine = achatTotal > 0 ? `*Total à payer : ${achatTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode : ${currentMethod}%0A%0A` : '';
+        const msg = `Bonjour 👋%0AOpération(s) PayPal :%0A%0A*ID Transaction : ${transactionId}*%0A%0A${orderDetails}${payLine}Capture d'écran de paiement ci-jointe ⬇️`;
+        window.cart = []; window.saveCart(); window.renderCart();
+        window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
+    };
+
+    window.setCryptoOp = function(type) {
+        document.getElementById('cryptoType').value = type;
+        document.getElementById('tabAchat').classList.toggle('active', type === 'Achat');
+        document.getElementById('tabVente').classList.toggle('active', type === 'Vente');
+        const isAchat = type === 'Achat';
+        const walletGroup = document.getElementById('cryptoWalletGroup');
+        const momoGroup = document.getElementById('cryptoMomoGroup');
+        const sendInfo = document.getElementById('cryptoSendInfo');
+        if (walletGroup) walletGroup.style.display = isAchat ? 'block' : 'none';
+        if (momoGroup) momoGroup.style.display = isAchat ? 'none' : 'grid';
+        if (sendInfo) sendInfo.style.display = isAchat ? 'none' : 'block';
+        const amountEl = document.getElementById('cryptoAmount');
+        if (amountEl) amountEl.value = '';
+        window.calculateCrypto();
+    };
+
+    window.calculateCrypto = function() {
+        const coin = document.getElementById('cryptoCoin')?.value || 'USDT (TRC20)';
+        const type = document.getElementById('cryptoType')?.value || 'Achat';
+        const amountEl = document.getElementById('cryptoAmount');
+        const labelEl = document.getElementById('cryptoAmountLabel');
+        const convEl = document.getElementById('cryptoConvertedAmount');
+        const rateEl = document.getElementById('cryptoRateInfo');
+        const convLabelEl = document.getElementById('cryptoConvLabel');
+        if (!convEl) return;
+        const rates = cryptoRates[coin];
+        if (!rates) return;
+        const isAchat = type === 'Achat';
+        const amount = parseFloat(amountEl?.value || 0) || 0;
+        if (labelEl) labelEl.innerText = isAchat ? 'Montant à payer (FCFA)' : `Quantité à vendre (${rates.symbol})`;
+        if (convLabelEl) convLabelEl.innerText = isAchat ? `💱 Vous recevrez (${rates.symbol})` : '💰 Vous recevrez (FCFA)';
+        if (isAchat) {
+            const cryptoAmt = amount > 0 ? (amount / rates.achat).toFixed(rates.dec) : 0;
+            convEl.innerText = cryptoAmt > 0 ? `${cryptoAmt} ${rates.symbol}` : `0 ${rates.symbol}`;
+            if (rateEl) rateEl.innerText = amount > 0 ? `${amount.toLocaleString('fr-FR')} FCFA ÷ ${rates.achat} = ${cryptoAmt} ${rates.symbol}` : '';
+        } else {
+            const fcfa = amount > 0 ? Math.floor(amount * rates.vente) : 0;
+            convEl.innerText = fcfa > 0 ? fcfa.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
+            if (rateEl) rateEl.innerText = amount > 0 ? `${amount} ${rates.symbol} × ${rates.vente} FCFA = ${fcfa.toLocaleString('fr-FR')} FCFA` : '';
+        }
+    };
+
+    window.addCryptoToCart = function() {
+        const coin = document.getElementById('cryptoCoin')?.value;
+        const type = document.getElementById('cryptoType')?.value || 'Achat';
+        const amount = document.getElementById('cryptoAmount')?.value?.trim();
+        const name = document.getElementById('cryptoName')?.value?.trim();
+        const wallet = document.getElementById('cryptoWallet')?.value?.trim();
+        const network = document.getElementById('cryptoNetwork')?.value;
+        const phone = document.getElementById('cryptoPhone')?.value?.trim();
+        const isAchat = type === 'Achat';
+
+        if (!amount || !name) { alert("Veuillez renseigner le montant et votre nom complet."); return; }
+        if (isAchat && !wallet) { alert("Veuillez renseigner votre adresse de wallet pour recevoir vos cryptos."); return; }
+        if (!isAchat && !phone) { alert("Veuillez renseigner votre numéro Mobile Money pour recevoir vos FCFA."); return; }
+
+        const rates = cryptoRates[coin];
+        if (!rates) return;
+
+        let fcfa, cryptoAmt, totalPrice, displayPrice;
+        if (isAchat) {
+            fcfa = parseFloat(amount);
+            cryptoAmt = (fcfa / rates.achat).toFixed(rates.dec);
+            totalPrice = fcfa; displayPrice = fcfa;
+        } else {
+            cryptoAmt = amount;
+            fcfa = Math.floor(parseFloat(amount) * rates.vente);
+            totalPrice = 0; displayPrice = fcfa;
+        }
+
+        const serviceFull = isAchat ? `Achat ${rates.symbol}` : `Vente ${rates.symbol}`;
+        const desc = isAchat
+            ? `${fcfa.toLocaleString('fr-FR')} FCFA → ${cryptoAmt} ${rates.symbol} | Wallet: ${wallet} (${name})`
+            : `${cryptoAmt} ${rates.symbol} → ${fcfa.toLocaleString('fr-FR')} FCFA | ${network}: ${phone} (${name})`;
 
         const item = {
-            title: `${type} ${coin}`,
-            desc: `Montant: ${amount}`,
-            totalPrice: 0,
+            title: `Crypto: ${serviceFull} — ${isAchat ? fcfa.toLocaleString('fr-FR') + ' FCFA' : cryptoAmt + ' ' + rates.symbol}`,
+            desc,
+            totalPrice,
+            _displayPrice: displayPrice,
+            _operation: type.toLowerCase(),
             qty: 1
         };
 
         window.addGenericToCart(item);
-        document.getElementById('cryptoAmount').value = "";
+        ['cryptoAmount', 'cryptoName', 'cryptoWallet', 'cryptoPhone'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        window.calculateCrypto();
+    };
+
+    window.sendCryptoOrder = function() {
+        if (window.cart.length === 0) { alert("Votre panier est vide."); return; }
+        const achatTotal = window.cart.filter(i => i._operation === 'achat').reduce((s, i) => s + i.totalPrice, 0);
+        if (achatTotal > 0 && !currentMethod) {
+            alert("Veuillez choisir un mode de paiement (MTN ou Orange Money) pour vos achats de cryptos.");
+            return;
+        }
+        let orderDetails = "";
+        const transactionId = "CMD-" + Math.floor(100000 + Math.random() * 900000);
+        window.cart.forEach((item, index) => {
+            const opLabel = item._operation === 'achat' ? '📥 Achat' : '📤 Vente';
+            orderDetails += `*${opLabel} ${index + 1} :*%0A- ${item.title}%0A- ${item.desc}%0A%0A`;
+        });
+        const payLine = achatTotal > 0 ? `*Total à payer : ${achatTotal.toLocaleString('fr-FR')} FCFA*%0AMéthode : ${currentMethod}%0A%0A` : '';
+        const msg = `Bonjour 👋%0ADemande d'échange Crypto :%0A%0A*ID Transaction : ${transactionId}*%0A%0A${orderDetails}${payLine}Capture d'écran de paiement ci-jointe ⬇️`;
+        window.cart = []; window.saveCart(); window.renderCart();
+        window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
     };
 
     window.addCouponToCart = function() {

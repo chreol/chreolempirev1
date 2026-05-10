@@ -1541,3 +1541,153 @@ footer {
         border-radius: 14px;
     }
 }
+
+/* ── Crypto Ticker ────────────────────────────────────── */
+.crypto-ticker {
+    background: rgba(0,0,0,0.45);
+    border-top: 1px solid rgba(212,175,55,0.1);
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+}
+.crypto-ticker::before,
+.crypto-ticker::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; width: 60px; z-index: 2;
+    pointer-events: none;
+}
+.crypto-ticker::before { left: 0; background: linear-gradient(to right, var(--black), transparent); }
+.crypto-ticker::after  { right: 0; background: linear-gradient(to left,  var(--black), transparent); }
+
+.ticker-track {
+    display: flex;
+    width: max-content;
+    animation: tickerScroll 40s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+
+@keyframes tickerScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 22px;
+    border-right: 1px solid rgba(212,175,55,0.12);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+.ticker-coin  { color: var(--text); font-weight: 600; }
+.ticker-op    { font-size: 0.68rem; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+.ticker-op.achat { background: rgba(37,211,102,0.15); color: #25D366; }
+.ticker-op.vente { background: rgba(212,175,55,0.12); color: var(--gold); }
+.ticker-val   { color: var(--text-muted); }
+
+/* ── Crypto Rate Cards ───────────────────────────────── */
+.crypto-rates-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 8px;
+}
+@media (max-width: 900px) { .crypto-rates-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .crypto-rates-grid { gap: 10px; } }
+
+.crypto-rate-card {
+    background: var(--black-light);
+    border: 1px solid rgba(212,175,55,0.12);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    transition: border-color 0.25s, transform 0.2s;
+}
+.crypto-rate-card:hover {
+    border-color: rgba(212,175,55,0.4);
+    transform: translateY(-3px);
+}
+.crypto-rate-card .coin-emoji {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 6px;
+}
+.crypto-rate-card .coin-name {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.crypto-rate-card .rate-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+.crypto-rate-card .rate-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.crypto-rate-card .rate-val-achat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #25D366;
+}
+.crypto-rate-card .rate-val-vente {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+.crypto-rate-card .rate-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin: 6px 0;
+}
+.crypto-rate-card .rate-limits {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.6;
+}
+
+/* ── Exchange Operation Tabs ─────────────────────────── */
+.exchange-op-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 22px;
+    border: 1px solid rgba(212,175,55,0.15);
+    gap: 4px;
+}
+.exchange-op-tabs .op-tab {
+    padding: 12px 10px;
+    text-align: center;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
+    transition: all 0.25s;
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+}
+.exchange-op-tabs .op-tab.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+}
+@media (max-width: 480px) {
+    .exchange-op-tabs .op-tab { font-size: 0.78rem; padding: 10px 6px; }
+}
