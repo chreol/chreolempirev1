@@ -133,13 +133,29 @@
                 <small id="couponRateInfo" style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-top: 6px; display: block;"></small>
             </div>
 
-            <!-- Avertissement -->
-            <div class="screenshot-notice" style="margin-top: 20px; margin-bottom: 20px;">
-                ⚠️ <b>IMPORTANT :</b> Après validation, envoyez la <b>capture d'écran du/des coupon(s)</b> sur WhatsApp. Le paiement Mobile Money sera effectué dès vérification des codes.
-            </div>
+            <!-- Ajouter au panier -->
+            <button class="btn-wa" onclick="addCouponExchangeToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-top: 10px;">
+                <i class="fas fa-cart-plus"></i> Ajouter au panier
+            </button>
 
-            <!-- Bouton envoi -->
-            <button class="btn-wa" onclick="sendCouponOrder()">✅ Valider l'échange sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+            <!-- Section panier -->
+            <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 30px;">
+                <h3 style="color: var(--gold); margin-bottom: 15px;"><i class="fas fa-shopping-basket"></i> Vos demandes d'échange</h3>
+                <div id="cartItems" style="margin-bottom: 20px;"></div>
+
+                <div class="price-display" style="background: rgba(37,211,102,0.07); border-color: rgba(37,211,102,0.35);">
+                    <div class="price-label" style="color: #25D366;">💰 Total net à recevoir</div>
+                    <div class="price-amount" id="cartTotalPrice">0 FCFA</div>
+                </div>
+
+                <div class="screenshot-notice" style="margin-top: 20px; margin-bottom: 20px;">
+                    ⚠️ <b>IMPORTANT :</b> Après envoi, transmettez la <b>capture d'écran du/des coupon(s)</b> sur WhatsApp. Le paiement Mobile Money sera effectué dès vérification des codes.
+                </div>
+
+                <button class="btn-wa" onclick="sendCouponCartOrder()">
+                    ✅ Envoyer la demande sur WhatsApp <i class="fab fa-whatsapp"></i>
+                </button>
+            </div>
         </div>
     </section>
 

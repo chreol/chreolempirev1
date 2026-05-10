@@ -500,12 +500,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!convEl) return;
 
         const service = serviceEl ? serviceEl.value : 'vente';
+        const isVente = service === 'vente';
         const amount = parseFloat(amountEl ? amountEl.value : 0) || 0;
         const rate = paypalRates[service] || 500;
         const fcfa = Math.floor(amount * rate);
 
         if (labelEl) {
-            labelEl.innerText = service === 'vente'
+            labelEl.innerText = isVente
                 ? '💰 Vous recevrez (FCFA)'
                 : '💳 Vous paierez (FCFA)';
         }
@@ -515,6 +516,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `${amount}€ × ${rate} FCFA/€ = ${fcfa.toLocaleString('fr-FR')} FCFA`
                 : '';
         }
+
+        const sendInfo = document.getElementById('paypalSendInfo');
+        const emailGroup = document.getElementById('paypalEmailGroup');
+        const momoGroup = document.getElementById('paypalMomoGroup');
+        if (sendInfo) sendInfo.style.display = isVente ? 'block' : 'none';
+        if (emailGroup) emailGroup.style.display = isVente ? 'none' : 'block';
+        if (momoGroup) momoGroup.style.display = isVente ? 'grid' : 'none';
     };
 
     window.addPayPalToCart = function() {
@@ -524,20 +532,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = document.getElementById('paypalName')?.value?.trim();
         const network = document.getElementById('paypalNetwork')?.value;
         const phone = document.getElementById('paypalPhone')?.value?.trim();
+        const isVente = service === 'vente';
 
-        if (!amount || !email || !name || !phone) {
-            alert("Veuillez remplir tous les champs obligatoires (montant, email, nom, téléphone).");
+        if (!amount || !name) {
+            alert("Veuillez renseigner le montant et votre nom complet.");
+            return;
+        }
+        if (isVente && !phone) {
+            alert("Veuillez renseigner votre numéro de téléphone Mobile Money.");
+            return;
+        }
+        if (!isVente && !email) {
+            alert("Veuillez renseigner votre adresse email PayPal.");
             return;
         }
 
         const rate = paypalRates[service] || 500;
         const fcfa = Math.floor(parseFloat(amount) * rate);
-        const serviceFull = service === 'vente' ? 'Retrait PayPal → FCFA' : 'Recharge PayPal ← FCFA';
+        const serviceFull = isVente ? 'Retrait PayPal → FCFA' : 'Recharge PayPal ← FCFA';
+        const desc = isVente
+            ? `${fcfa.toLocaleString('fr-FR')} FCFA | ${network}: ${phone} (${name})`
+            : `${fcfa.toLocaleString('fr-FR')} FCFA | ${email} (${name})`;
 
         const item = {
             title: `PayPal: ${serviceFull} — ${amount}€`,
-            desc: `${fcfa.toLocaleString('fr-FR')} FCFA | ${email} | ${network}: ${phone} (${name})`,
-            totalPrice: service === 'achat' ? fcfa : 0,
+            desc,
+            totalPrice: isVente ? 0 : fcfa,
             qty: 1
         };
 

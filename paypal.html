@@ -70,13 +70,13 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px;">
                 <div style="background: rgba(37,211,102,0.07); border: 1px solid rgba(37,211,102,0.3); border-radius: 14px; padding: 20px; text-align: center;">
                     <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #25D366; font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">📤 Retrait / Vente</div>
-                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">1€ = <span style="color: #25D366;">500</span> FCFA</div>
+                    <!-- <div style="font-size: 1.6rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">1€ = <span style="color: #25D366;">500</span> FCFA</div> -->
                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Min : 20€ &nbsp;·&nbsp; Max : 500€/jour</div>
                 </div>
                 <div style="background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 20px; text-align: center;">
                     <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">📥 Recharge / Achat</div>
-                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">1€ = <span style="color: var(--gold);">700</span> FCFA</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Min : 10 000 FCFA &nbsp;·&nbsp; Max : 350 000 FCFA</div>
+                    <!-- <div style="font-size: 1.6rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">1€ = <span style="color: var(--gold);">700</span> FCFA</div> -->
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Min : 10 000 FCFA &nbsp;·&nbsp; Max : 500 000 FCFA</div>
                 </div>
             </div>
 
@@ -89,15 +89,21 @@
                 </select>
             </div>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="paypalAmount" id="paypalAmountLabel">Montant (€ EUR)</label>
-                    <input type="number" id="paypalAmount" placeholder="Ex: 50" min="1" oninput="calculatePaypal()">
-                </div>
-                <div class="form-group">
-                    <label for="paypalEmail">Email PayPal</label>
-                    <input type="email" id="paypalEmail" placeholder="votre@email.com">
-                </div>
+            <div class="form-group">
+                <label for="paypalAmount" id="paypalAmountLabel">Montant (€ EUR)</label>
+                <input type="number" id="paypalAmount" placeholder="Ex: 50" min="1" oninput="calculatePaypal()">
+            </div>
+
+            <!-- Adresse PayPal à créditer (vente uniquement, visible par défaut) -->
+            <div id="paypalSendInfo" style="background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.35); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;">
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #25D366; font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">📤 Envoyez votre solde PayPal à cette adresse</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: 0.5px;">LARAMBAMBO@GMAIL.COM</div>
+            </div>
+
+            <!-- Email PayPal client (achat uniquement, masqué par défaut) -->
+            <div class="form-group" id="paypalEmailGroup" style="display: none;">
+                <label for="paypalEmail">Email PayPal <span style="color: #e74c3c;">*</span> (votre compte)</label>
+                <input type="email" id="paypalEmail" placeholder="votre@email.com">
             </div>
 
             <div class="form-group">
@@ -105,7 +111,8 @@
                 <input type="text" id="paypalName" placeholder="Ex: Jean Dupont">
             </div>
 
-            <div class="form-grid">
+            <!-- Réseau + Téléphone (vente uniquement, visible par défaut) -->
+            <div class="form-grid" id="paypalMomoGroup">
                 <div class="form-group">
                     <label for="paypalNetwork">Réseau Mobile Money</label>
                     <select id="paypalNetwork">
