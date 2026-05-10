@@ -489,26 +489,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // WhatsApp / Contact modal handled by global openContactModal below
 
-    window.addPayPalToCart = function() {
-        const service = document.getElementById('paypalService').value;
-        const amount = document.getElementById('paypalAmount').value;
-        const email = document.getElementById('paypalEmail').value;
+    const paypalRates = { vente: 500, achat: 700 };
 
-        if (!amount || !email) {
-            alert("Veuillez remplir le montant et l'email.");
+    window.calculatePaypal = function() {
+        const serviceEl = document.getElementById('paypalService');
+        const amountEl = document.getElementById('paypalAmount');
+        const convEl = document.getElementById('paypalConvertedAmount');
+        const rateEl = document.getElementById('paypalRateInfo');
+        const labelEl = document.getElementById('paypalConvLabel');
+        if (!convEl) return;
+
+        const service = serviceEl ? serviceEl.value : 'vente';
+        const amount = parseFloat(amountEl ? amountEl.value : 0) || 0;
+        const rate = paypalRates[service] || 500;
+        const fcfa = Math.floor(amount * rate);
+
+        if (labelEl) {
+            labelEl.innerText = service === 'vente'
+                ? '💰 Vous recevrez (FCFA)'
+                : '💳 Vous paierez (FCFA)';
+        }
+        convEl.innerText = fcfa > 0 ? fcfa.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
+        if (rateEl) {
+            rateEl.innerText = amount > 0
+                ? `${amount}€ × ${rate} FCFA/€ = ${fcfa.toLocaleString('fr-FR')} FCFA`
+                : '';
+        }
+    };
+
+    window.addPayPalToCart = function() {
+        const service = document.getElementById('paypalService')?.value;
+        const amount = document.getElementById('paypalAmount')?.value?.trim();
+        const email = document.getElementById('paypalEmail')?.value?.trim();
+        const name = document.getElementById('paypalName')?.value?.trim();
+        const network = document.getElementById('paypalNetwork')?.value;
+        const phone = document.getElementById('paypalPhone')?.value?.trim();
+
+        if (!amount || !email || !name || !phone) {
+            alert("Veuillez remplir tous les champs obligatoires (montant, email, nom, téléphone).");
             return;
         }
 
+        const rate = paypalRates[service] || 500;
+        const fcfa = Math.floor(parseFloat(amount) * rate);
+        const serviceFull = service === 'vente' ? 'Retrait PayPal → FCFA' : 'Recharge PayPal ← FCFA';
+
         const item = {
-            title: `PayPal: ${service}`,
-            desc: `Montant: ${amount} | Email: ${email}`,
-            totalPrice: 0,
+            title: `PayPal: ${serviceFull} — ${amount}€`,
+            desc: `${fcfa.toLocaleString('fr-FR')} FCFA | ${email} | ${network}: ${phone} (${name})`,
+            totalPrice: service === 'achat' ? fcfa : 0,
             qty: 1
         };
 
         window.addGenericToCart(item);
-        document.getElementById('paypalAmount').value = "";
-        document.getElementById('paypalEmail').value = "";
+        ['paypalAmount', 'paypalEmail', 'paypalName', 'paypalPhone'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        window.calculatePaypal();
     };
 
     window.addCryptoToCart = function() {
@@ -605,6 +643,79 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const msg = `Bonjour%20%F0%9F%91%8B%0A*Demande%20d%27%C3%A9change%20de%20coupon*%0A%0A%F0%9F%8F%B7%EF%B8%8F%20*Type%20:*%20${encodeURIComponent(typeFull)}%0A%F0%9F%92%B6%20*Valeur%20totale%20:*%20${encodeURIComponent(value)}%E2%82%AC%0A%F0%9F%94%91%20*Code(s)%20:*%0A${codesEncoded}%0A%0A%F0%9F%93%B1%20*R%C3%A9ception%20Mobile%20Money%20:*%0A*Nom%20:*%20${encodeURIComponent(beneficiary)}%0A*R%C3%A9seau%20:*%20${encodeURIComponent(network)}%0A*N%C2%B0%20:*%20${encodeURIComponent(phone)}%0A%0A%F0%9F%92%B0%20*Montant%20net%20attendu%20:*%20${net.toLocaleString('fr-FR')}%20FCFA`;
 
+        window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
+    };
+
+    window.addCouponExchangeToCart = function() {
+        const type = document.getElementById('couponType')?.value;
+        const value = document.getElementById('couponValue')?.value?.trim();
+        const codes = document.getElementById('couponCodes')?.value?.trim();
+        const beneficiary = document.getElementById('couponBeneficiary')?.value?.trim();
+        const network = document.getElementById('couponNetwork')?.value;
+        const phone = document.getElementById('couponPhone')?.value?.trim();
+
+        if (!value || !codes || !beneficiary || !phone) {
+            alert("Veuillez remplir tous les champs obligatoires (valeur, code(s), nom, téléphone).");
+            return;
+        }
+
+        const net = computeCouponNet(type, parseFloat(value));
+        const typeFull = type === 'PCS' ? 'PCS Mastercard' : 'Transcash';
+
+        const item = {
+            title: `Échange ${typeFull} — ${value}€`,
+            desc: `Net: ${net.toLocaleString('fr-FR')} FCFA → ${network}: ${phone} (${beneficiary})`,
+            totalPrice: net,
+            qty: 1,
+            _couponCodes: codes,
+            _beneficiary: beneficiary,
+            _network: network,
+            _phone: phone,
+            _typeFull: typeFull,
+            _value: value,
+            _net: net
+        };
+
+        window.addGenericToCart(item);
+
+        // Réinitialiser le formulaire
+        ['couponValue', 'couponCodes', 'couponBeneficiary', 'couponPhone'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        window.calculateCouponNet();
+    };
+
+    window.sendCouponCartOrder = function() {
+        if (window.cart.length === 0) {
+            alert("Votre panier est vide.");
+            return;
+        }
+
+        let orderText = '';
+        let grandTotal = 0;
+
+        window.cart.forEach((item, index) => {
+            grandTotal += item._net || item.totalPrice || 0;
+            if (item._couponCodes) {
+                const codesLines = item._couponCodes.split('\n').map(l => l.trim()).filter(Boolean).join('%0A    ');
+                orderText += `*Échange ${index + 1} :*%0A`;
+                orderText += `- Type : ${encodeURIComponent(item._typeFull)}%0A`;
+                orderText += `- Valeur : ${encodeURIComponent(item._value)}€%0A`;
+                orderText += `- Code(s) :%0A    ${codesLines}%0A`;
+                orderText += `- Réception : ${encodeURIComponent(item._network)} — ${encodeURIComponent(item._phone)} (${encodeURIComponent(item._beneficiary)})%0A`;
+                orderText += `- Montant net : *${(item._net || 0).toLocaleString('fr-FR')} FCFA*%0A%0A`;
+            } else {
+                orderText += `*Article ${index + 1} :* ${encodeURIComponent(item.title)}%0A${encodeURIComponent(item.desc)}%0A%0A`;
+            }
+        });
+
+        const totalLine = grandTotal > 0 ? `%0A*Total net à recevoir : ${grandTotal.toLocaleString('fr-FR')} FCFA*` : '';
+        const msg = `Bonjour%20%F0%9F%91%8B%0A*Demande(s)%20d'échange%20de%20coupons*%0A%0A${orderText}${totalLine}`;
+
+        window.cart = [];
+        window.saveCart();
+        window.renderCart();
         window.open(`https://wa.me/237697657734?text=${msg}`, '_blank');
     };
 

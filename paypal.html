@@ -61,54 +61,102 @@
         </div>
     </section>
 
-    <!-- Selection Form -->
+    <!-- Service PayPal -->
     <section class="card-selection" id="commander">
-        <h2>Service PayPal</h2>
+        <h2>Estimateur de Conversion</h2>
         <div class="form-container">
+
+            <!-- Taux du jour -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px;">
+                <div style="background: rgba(37,211,102,0.07); border: 1px solid rgba(37,211,102,0.3); border-radius: 14px; padding: 20px; text-align: center;">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #25D366; font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">📤 Retrait / Vente</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">1€ = <span style="color: #25D366;">500</span> FCFA</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Min : 20€ &nbsp;·&nbsp; Max : 500€/jour</div>
+                </div>
+                <div style="background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 20px; text-align: center;">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px;">📥 Recharge / Achat</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace;">1€ = <span style="color: var(--gold);">700</span> FCFA</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Min : 10 000 FCFA &nbsp;·&nbsp; Max : 350 000 FCFA</div>
+                </div>
+            </div>
+
+            <!-- Opération -->
+            <div class="form-group">
+                <label for="paypalService">Opération</label>
+                <select id="paypalService" onchange="calculatePaypal()">
+                    <option value="vente">📤 Je vends mon solde PayPal (Retrait → FCFA)</option>
+                    <option value="achat">📥 J'achète du solde PayPal (Recharge ← FCFA)</option>
+                </select>
+            </div>
+
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="paypalService">Opération</label>
-                    <select id="paypalService">
-                        <option value="Achat de solde PayPal (Recharge)">Je souhaite acheter du solde (Recharge)</option>
-                        <option value="Vente de solde PayPal (Retrait)">Je souhaite vendre du solde (Retrait)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="paypalAmount">Montant (en EUR)</label>
-                    <input type="text" id="paypalAmount" placeholder="Ex: 50€" required>
+                    <label for="paypalAmount" id="paypalAmountLabel">Montant (€ EUR)</label>
+                    <input type="number" id="paypalAmount" placeholder="Ex: 50" min="1" oninput="calculatePaypal()">
                 </div>
                 <div class="form-group">
                     <label for="paypalEmail">Email PayPal</label>
-                    <input type="email" id="paypalEmail" placeholder="votre@email.com" required>
+                    <input type="email" id="paypalEmail" placeholder="votre@email.com">
                 </div>
             </div>
-            
-            <button class="btn-wa" onclick="addPayPalToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-bottom: 20px;">Ajouter au panier <i class="fas fa-cart-plus"></i></button>
-            
-            <div id="cartSection" style="display: none; margin-top: 30px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
-                <h3 style="color: var(--gold); margin-bottom: 15px;">Votre Panier</h3>
+
+            <div class="form-group">
+                <label for="paypalName">Nom &amp; Prénom</label>
+                <input type="text" id="paypalName" placeholder="Ex: Jean Dupont">
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="paypalNetwork">Réseau Mobile Money</label>
+                    <select id="paypalNetwork">
+                        <option value="Orange Money">🟠 Orange Money</option>
+                        <option value="MTN Money">🟡 MTN Money</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paypalPhone">Numéro de téléphone</label>
+                    <input type="tel" id="paypalPhone" placeholder="Ex: 697 657 734" maxlength="9" inputmode="numeric">
+                </div>
+            </div>
+
+            <!-- Résultat conversion -->
+            <div class="price-display" style="margin-top: 10px;">
+                <div class="price-label" id="paypalConvLabel">💰 Montant converti</div>
+                <div class="price-amount" id="paypalConvertedAmount">0 FCFA</div>
+                <small id="paypalRateInfo" style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-top: 6px; display: block;"></small>
+            </div>
+
+            <button class="btn-wa" onclick="addPayPalToCart()" style="background: linear-gradient(45deg, var(--gold), var(--gold-dark)); color: var(--black); margin-top: 10px; margin-bottom: 20px;">
+                <i class="fas fa-cart-plus"></i> Ajouter au panier
+            </button>
+
+            <!-- Section panier -->
+            <div id="cartSection" style="display: none; margin-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
+                <h3 style="color: var(--gold); margin-bottom: 15px;"><i class="fas fa-shopping-basket"></i> Votre Panier</h3>
                 <div id="cartItems" style="margin-bottom: 20px;"></div>
-                
+
                 <div class="price-display" style="background: rgba(212, 175, 55, 0.15);">
-                    <div class="price-label">Prix Total du Panier</div>
+                    <div class="price-label">Total à payer (opérations Recharge)</div>
                     <div class="price-amount" id="cartTotalPrice">0 FCFA</div>
                 </div>
 
                 <div class="payment-section">
-                    <label>Mode de Paiement</label>
+                    <label>Mode de Paiement (Recharge uniquement)</label>
                     <div class="payment-grid">
                         <div class="pay-card" id="mtn-btn" onclick="selectPayment('MTN')">🟡 MTN Money</div>
                         <div class="pay-card" id="om-btn" onclick="selectPayment('OM')">🟠 Orange Money</div>
                     </div>
-                    
                     <div class="ussd-box" id="ussdBox" style="display: none;">
                         <div id="ussdInfo"></div>
                         <div class="ussd-code" id="ussdCode"></div>
                         <div class="ussd-action">Action : Tapez ce code pour valider le paiement.</div>
                     </div>
+                    <div class="screenshot-notice">
+                        ⚠️ <b>IMPORTANT :</b> Joignez la <b>capture d'écran</b> du paiement à votre message WhatsApp pour que votre demande soit traitée immédiatement.
+                    </div>
                 </div>
 
-                <button class="btn-wa" onclick="sendOrder()">Finaliser la commande sur WhatsApp <i class="fab fa-whatsapp"></i></button>
+                <button class="btn-wa" onclick="sendOrder()">Finaliser la demande sur WhatsApp <i class="fab fa-whatsapp"></i></button>
             </div>
         </div>
     </section>
